@@ -4,27 +4,29 @@ steps:
     commands:
       - npm ci
       - npm run build
+    when:
+      event:
+        - push
+        - pull_request
+        - tag
 
   publish-main:
-    image: woodpeckerci/plugin-docker-buildx
+    image: woodpeckerci/plugin-kaniko
     depends_on:
       - verify
     settings:
-      context: .
-      dockerfile: Dockerfile
       registry: rg.furkantrn.com
       repo: rg.furkantrn.com/movie-archive
+      dockerfile: Dockerfile
+      context: .
+      cache: true
+      tags:
+        - latest
+        - ${CI_COMMIT_SHA}
       username:
         from_secret: rg_username
       password:
         from_secret: rg_password
-      tags:
-        - latest
-        - ${CI_COMMIT_SHA}
-      cache_from:
-        - rg.furkantrn.com/movie-archive:latest
-      platforms:
-        - linux/amd64
     when:
       branch:
         - main
@@ -33,23 +35,20 @@ steps:
         - push
 
   publish-tag:
-    image: woodpeckerci/plugin-docker-buildx
+    image: woodpeckerci/plugin-kaniko
     depends_on:
       - verify
     settings:
-      auto_tag: true
-      context: .
-      dockerfile: Dockerfile
       registry: rg.furkantrn.com
       repo: rg.furkantrn.com/movie-archive
+      dockerfile: Dockerfile
+      context: .
+      cache: true
+      auto_tag: true
       username:
         from_secret: rg_username
       password:
         from_secret: rg_password
-      cache_from:
-        - rg.furkantrn.com/movie-archive:latest
-      platforms:
-        - linux/amd64
     when:
       event:
         - tag
