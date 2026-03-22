@@ -9,7 +9,7 @@ steps:
         - push
         - pull_request
         - tag
-        - manual
+        - deployment
 
   publish-main:
     image: woodpeckerci/plugin-kaniko
@@ -67,6 +67,8 @@ steps:
         from_secret: rg_username
     commands:
       - apk add --no-cache curl
+      - '[ "${CI_PIPELINE_DEPLOY_TARGET:-}" = "production" ]'
+      - '[ "${CI_PIPELINE_DEPLOY_TASK:-}" = "deploy" ]'
       - cd "$DEPLOY_PATH"
       - echo "$RG_PASSWORD" | docker login rg.furkantrn.com --username "$RG_USERNAME" --password-stdin
       - IMAGE_TAG="$CI_COMMIT_SHA" docker compose pull
@@ -90,6 +92,5 @@ steps:
         docker logs --tail=100 movie-archive || true
         exit 1
     when:
-      - event: manual
-        branch:
-          - main
+      event:
+        - deployment
