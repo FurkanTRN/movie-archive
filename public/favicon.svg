@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Movie Archive">
+  <defs>
+    <linearGradient id="bg" x1="10" x2="54" y1="8" y2="56" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0f172a" />
+      <stop offset="1" stop-color="#1e293b" />
+    </linearGradient>
+    <linearGradient id="accent" x1="18" x2="48" y1="16" y2="48" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f59e0b" />
+      <stop offset="1" stop-color="#ef4444" />
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="18" fill="url(#bg)" />
+  <path
+    d="M20 16h24c2.209 0 4 1.791 4 4v24c0 2.209-1.791 4-4 4H20c-2.209 0-4-1.791-4-4V20c0-2.209 1.791-4 4-4Z"
+    fill="url(#accent)"
+  />
+  <path d="M24 16v32M40 16v32M16 24h32M16 40h32" fill="none" opacity="0.22" stroke="#fff8eb" stroke-width="2.25" />
+  <circle cx="20" cy="20" r="2.5" fill="#fff8eb" />
+  <circle cx="44" cy="20" r="2.5" fill="#fff8eb" />
+  <circle cx="20" cy="44" r="2.5" fill="#fff8eb" />
+  <circle cx="44" cy="44" r="2.5" fill="#fff8eb" />
+  <path d="M28 25.5v13L39 32 28 25.5Z" fill="#fff8eb" />
+</svg>

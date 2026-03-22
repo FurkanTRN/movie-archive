@@ -1,0 +1,55 @@
+steps:
+  verify:
+    image: node:22-bookworm-slim
+    commands:
+      - npm ci
+      - npm run build
+
+  publish-main:
+    image: woodpeckerci/plugin-docker-buildx
+    depends_on:
+      - verify
+    settings:
+      context: .
+      dockerfile: Dockerfile
+      registry: rg.furkantrn.com
+      repo: rg.furkantrn.com/movie-archive
+      username:
+        from_secret: rg_username
+      password:
+        from_secret: rg_password
+      tags:
+        - latest
+        - ${CI_COMMIT_SHA}
+      cache_from:
+        - rg.furkantrn.com/movie-archive:latest
+      platforms:
+        - linux/amd64
+    when:
+      branch:
+        - main
+        - master
+      event:
+        - push
+
+  publish-tag:
+    image: woodpeckerci/plugin-docker-buildx
+    depends_on:
+      - verify
+    settings:
+      auto_tag: true
+      context: .
+      dockerfile: Dockerfile
+      registry: rg.furkantrn.com
+      repo: rg.furkantrn.com/movie-archive
+      username:
+        from_secret: rg_username
+      password:
+        from_secret: rg_password
+      cache_from:
+        - rg.furkantrn.com/movie-archive:latest
+      platforms:
+        - linux/amd64
+    when:
+      event:
+        - tag
