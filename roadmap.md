@@ -246,7 +246,7 @@ This document is the living implementation roadmap for the project. It is intend
 ### Phase 7: Dockerization
 
 - Status: `in progress`
-- Progress: `70%`
+- Progress: `85%`
 - Goal: package the application for repeatable self-hosted deployment
 - Scope:
   - production build flow
@@ -263,6 +263,7 @@ This document is the living implementation roadmap for the project. It is intend
   - [x] Mount persistent volume for SQLite data
   - [x] Define production startup command
   - [x] Define seed or admin bootstrap strategy
+  - [x] Add CI/CD deploy gate for manual production deploys
   - [ ] Run deployment smoke test with compose
 - Acceptance Criteria:
   - app can be started with `docker compose up`
@@ -294,3 +295,4 @@ This document is the living implementation roadmap for the project. It is intend
 - `2026-03-22`: Switched production to same-origin frontend serving with dev-only CORS, added a multi-stage `Dockerfile`, and started the Dockerization phase.
 - `2026-03-22`: Added a production `docker-compose.yml` that pulls from the private registry, mounts persistent SQLite data, and includes a container healthcheck.
 - `2026-03-22`: Added idempotent startup admin bootstrap so the first user can be created automatically from `ADMIN_EMAIL` and `ADMIN_PASSWORD`.
+- `2026-03-22`: Added a manual Woodpecker deploy step that connects to the VDS over SSH, deploys by immutable image SHA, and blocks on a container health gate plus `/api/health`.

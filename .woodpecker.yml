@@ -9,6 +9,7 @@ steps:
         - push
         - pull_request
         - tag
+        - manual
 
   publish-main:
     image: woodpeckerci/plugin-kaniko
@@ -16,7 +17,7 @@ steps:
       - verify
     settings:
       registry: rg.furkantrn.com
-      repo: rg.furkantrn.com/movie-archive
+      repo: movie-archive
       dockerfile: Dockerfile
       context: .
       cache: true
@@ -40,7 +41,7 @@ steps:
       - verify
     settings:
       registry: rg.furkantrn.com
-      repo: rg.furkantrn.com/movie-archive
+      repo: movie-archive
       dockerfile: Dockerfile
       context: .
       cache: true
@@ -52,3 +53,43 @@ steps:
     when:
       event:
         - tag
+
+  deploy-production:
+    image: docker:27-cli
+    depends_on:
+      - verify
+    environment:
+      DEPLOY_PATH:
+        from_secret: deploy_path
+      RG_PASSWORD:
+        from_secret: rg_password
+      RG_USERNAME:
+        from_secret: rg_username
+    commands:
+      - apk add --no-cache curl
+      - cd "$DEPLOY_PATH"
+      - echo "$RG_PASSWORD" | docker login rg.furkantrn.com --username "$RG_USERNAME" --password-stdin
+      - IMAGE_TAG="$CI_COMMIT_SHA" docker compose pull
+      - IMAGE_TAG="$CI_COMMIT_SHA" docker compose up -d
+      - docker compose ps
+      - |
+        attempt=0
+        while [ "$attempt" -lt 20 ]; do
+          health_status="$(docker inspect --format='{{if .State.Health}}{{.State.Health.Status}}{{else}}missing{{end}}' movie-archive 2>/dev/null || echo missing)"
+          if [ "$health_status" = "healthy" ]; then
+            docker exec movie-archive sh -lc "curl --fail --silent http://127.0.0.1:3001/api/health >/dev/null"
+            exit 0
+          fi
+
+          attempt=$((attempt + 1))
+          sleep 3
+        done
+
+        echo "Deploy health gate başarısız oldu"
+        docker compose ps
+        docker logs --tail=100 movie-archive || true
+        exit 1
+    when:
+      - event: manual
+        branch:
+          - main
