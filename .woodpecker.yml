@@ -79,7 +79,7 @@ steps:
         while [ "$attempt" -lt 20 ]; do
           health_status="$(docker inspect --format='{{if .State.Health}}{{.State.Health.Status}}{{else}}missing{{end}}' movie-archive 2>/dev/null || echo missing)"
           if [ "$health_status" = "healthy" ]; then
-            docker exec movie-archive sh -lc "curl --fail --silent http://127.0.0.1:3001/api/health >/dev/null"
+            docker exec movie-archive node -e "fetch('http://127.0.0.1:3001/api/health').then((response)=>process.exit(response.ok?0:1)).catch(()=>process.exit(1))"
             exit 0
           fi
 
