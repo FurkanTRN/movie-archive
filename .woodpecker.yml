@@ -34,6 +34,19 @@ steps:
         - master
       event:
         - push
+      path:
+        include:
+          - .dockerignore
+          - .env.example
+          - .woodpecker.yml
+          - Dockerfile
+          - docker-compose.yml
+          - package.json
+          - package-lock.json
+          - server/**
+          - src/**
+          - tsconfig*.json
+          - vite.config.*
 
   publish-tag:
     image: woodpeckerci/plugin-kaniko
@@ -53,6 +66,19 @@ steps:
     when:
       event:
         - tag
+      path:
+        include:
+          - .dockerignore
+          - .env.example
+          - .woodpecker.yml
+          - Dockerfile
+          - docker-compose.yml
+          - package.json
+          - package-lock.json
+          - server/**
+          - src/**
+          - tsconfig*.json
+          - vite.config.*
 
   deploy-production:
     image: docker:27-cli
