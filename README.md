@@ -131,7 +131,7 @@ Important env variables:
 - `ADMIN_EMAIL`
 - `ADMIN_PASSWORD`
 
-See [.env.example](/D:/movie-archive-app/movie-archive/.env.example) for the full template.
+See [.env.example](.env.example) for the full template.
 
 ## Production
 
@@ -139,8 +139,8 @@ The production image serves the built frontend and the API from the same origin.
 
 Main files:
 
-- [Dockerfile](/D:/movie-archive-app/movie-archive/Dockerfile)
-- [docker-compose.yml](/D:/movie-archive-app/movie-archive/docker-compose.yml)
+- [Dockerfile](Dockerfile)
+- [docker-compose.yml](docker-compose.yml)
 
 Run locally with Docker:
 
@@ -175,8 +175,8 @@ Production automated backup:
 
 Details:
 
-- [backup-and-restore.md](/D:/movie-archive-app/movie-archive/docs/backup-and-restore.md)
-- [monitoring.md](/D:/movie-archive-app/movie-archive/docs/monitoring.md)
+- [backup-and-restore.md](docs/backup-and-restore.md)
+- [monitoring.md](docs/monitoring.md)
 
 ## Deployment
 
@@ -188,7 +188,7 @@ Production deploys are image-based and use Woodpecker.
 
 Operational details:
 
-- [operations.md](/D:/movie-archive-app/movie-archive/docs/operations.md)
+- [operations.md](docs/operations.md)
 
 ## Health Check
 
@@ -207,7 +207,7 @@ It includes:
 
 ## Docs
 
-- [roadmap.md](/D:/movie-archive-app/movie-archive/docs/roadmap.md)
-- [operations.md](/D:/movie-archive-app/movie-archive/docs/operations.md)
-- [backup-and-restore.md](/D:/movie-archive-app/movie-archive/docs/backup-and-restore.md)
-- [monitoring.md](/D:/movie-archive-app/movie-archive/docs/monitoring.md)
+- [roadmap.md](docs/roadmap.md)
+- [operations.md](docs/operations.md)
+- [backup-and-restore.md](docs/backup-and-restore.md)
+- [monitoring.md](docs/monitoring.md)
