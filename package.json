@@ -13,6 +13,7 @@
         "build": "npm run build:client && npm run build:server",
         "build:client": "tsc -b tsconfig.app.json tsconfig.node.json && vite build",
         "build:server": "tsc -p tsconfig.server.json",
+        "backup:create": "tsx server/src/scripts/backup-sqlite.ts",
         "db:bootstrap": "tsx server/src/scripts/bootstrap-db.ts",
         "admin:create": "tsx server/src/scripts/create-admin.ts",
         "preview": "vite preview"
