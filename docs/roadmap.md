@@ -14,6 +14,12 @@ Personal movie archive application for self-hosted use.
 
 This document is the living implementation roadmap for the project. It is intended to track what has been decided, what is in progress, what is blocked, and what remains to be built.
 
+Related operations documents:
+
+- `docs/backup-and-restore.md` covers SQLite backup and restore workflow.
+- `docs/operations.md` covers production deploy, rollback, and troubleshooting flow.
+- `docs/monitoring.md` covers health checks and lightweight monitoring expectations.
+
 ## Agreed Technical Architecture
 
 - Application architecture: `React + Vite + Express + SQLite`
@@ -29,8 +35,8 @@ This document is the living implementation roadmap for the project. It is intend
 
 - Overall status: `active development`
 - Current phase: `Phase 7: Dockerization`
-- Completed phases: `6 / 8`
-- Immediate next milestone: finish container packaging with compose, persistent volumes, and smoke testing
+- Completed phases: `7 / 8`
+- Immediate next milestone: maintain production operations with automated backups and lightweight monitoring
 
 ## Phases
 
@@ -47,7 +53,7 @@ This document is the living implementation roadmap for the project. It is intend
   - [x] Define target folder structure for frontend and backend runtime separation
   - [x] Create `server/` application skeleton
   - [x] Define shared environment variable naming and loading strategy
-  - [x] Create initial `roadmap.md` living document
+  - [x] Create initial `docs/roadmap.md` living document
   - [x] Define local development workflow for frontend and backend together
 - Acceptance Criteria:
   - frontend/backend responsibilities are documented and unambiguous
@@ -245,8 +251,8 @@ This document is the living implementation roadmap for the project. It is intend
 
 ### Phase 7: Dockerization
 
-- Status: `in progress`
-- Progress: `85%`
+- Status: `done`
+- Progress: `100%`
 - Goal: package the application for repeatable self-hosted deployment
 - Scope:
   - production build flow
@@ -264,7 +270,8 @@ This document is the living implementation roadmap for the project. It is intend
   - [x] Define production startup command
   - [x] Define seed or admin bootstrap strategy
   - [x] Add CI/CD deploy gate for manual production deploys
-  - [ ] Run deployment smoke test with compose
+  - [x] Run deployment smoke test with compose
+  - [x] Add container-internal backup automation with a sidecar service
 - Acceptance Criteria:
   - app can be started with `docker compose up`
   - frontend and backend work correctly in containerized production mode
@@ -295,4 +302,6 @@ This document is the living implementation roadmap for the project. It is intend
 - `2026-03-22`: Switched production to same-origin frontend serving with dev-only CORS, added a multi-stage `Dockerfile`, and started the Dockerization phase.
 - `2026-03-22`: Added a production `docker-compose.yml` that pulls from the private registry, mounts persistent SQLite data, and includes a container healthcheck.
 - `2026-03-22`: Added idempotent startup admin bootstrap so the first user can be created automatically from `ADMIN_EMAIL` and `ADMIN_PASSWORD`.
-- `2026-03-22`: Added a manual Woodpecker deploy step that connects to the VDS over SSH, deploys by immutable image SHA, and blocks on a container health gate plus `/api/health`.
+- `2026-03-22`: Added a manual Woodpecker deploy step that deploys by immutable image SHA on the production VDS and blocks on a container health gate plus `/api/health`.
+- `2026-03-23`: Dropped the PostgreSQL + Redis migration track for now and documented the current SQLite-based production operations, backup, and monitoring workflow instead.
+- `2026-03-23`: Added a `movie-archive-backup` sidecar service, 72-hour SQLite backup rotation with max 3 files, and backup freshness visibility in `/api/health`.

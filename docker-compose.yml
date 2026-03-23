@@ -6,11 +6,14 @@ services:
     env_file:
       - .env
     environment:
+      BACKUP_DIR: /app/backups
+      BACKUP_TIMEZONE: ${BACKUP_TIMEZONE:-Europe/Istanbul}
       NODE_ENV: production
       PORT: 3001
     ports:
       - "${HOST_PORT:-3001}:3001"
     volumes:
+      - ./backups:/app/backups
       - ./data:/app/data
     healthcheck:
       test:
@@ -24,3 +27,19 @@ services:
       timeout: 5s
       retries: 3
       start_period: 15s
+  movie-archive-backup:
+    image: rg.furkantrn.com/movie-archive:${IMAGE_TAG:-latest}
+    container_name: movie-archive-backup
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      BACKUP_DIR: /app/backups
+      BACKUP_TIMEZONE: ${BACKUP_TIMEZONE:-Europe/Istanbul}
+      NODE_ENV: production
+      PORT: 3001
+      TZ: ${BACKUP_TIMEZONE:-Europe/Istanbul}
+    command: ["node", "dist-server/src/scripts/run-scheduled-backup.js"]
+    volumes:
+      - ./backups:/app/backups
+      - ./data:/app/data

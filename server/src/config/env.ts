@@ -7,6 +7,8 @@ const envSchema = z.object({
     ADMIN_EMAIL: z.string().trim().email("ADMIN_EMAIL geçerli bir e-posta olmalıdır").optional().or(z.literal("")),
     ADMIN_PASSWORD: z.string().optional().or(z.literal("")),
     APP_BASE_URL: z.string().trim().url("APP_BASE_URL geçerli bir URL olmalıdır").default("http://localhost:5173"),
+    BACKUP_DIR: z.string().trim().min(1, "BACKUP_DIR zorunludur").default("./backups"),
+    BACKUP_TIMEZONE: z.string().trim().min(1, "BACKUP_TIMEZONE zorunludur").default("Europe/Istanbul"),
     COOKIE_SECURE_AUTO: z
         .union([z.literal("true"), z.literal("false"), z.undefined()])
         .transform((value) => value !== "false"),
@@ -48,6 +50,8 @@ export const env = {
     adminEmail: parsedEnv.data.ADMIN_EMAIL ?? "",
     adminPassword: parsedEnv.data.ADMIN_PASSWORD ?? "",
     appBaseUrl: parsedEnv.data.APP_BASE_URL,
+    backupDir: parsedEnv.data.BACKUP_DIR,
+    backupTimezone: parsedEnv.data.BACKUP_TIMEZONE,
     cookieSecureAuto: parsedEnv.data.COOKIE_SECURE_AUTO,
     nodeEnv: parsedEnv.data.NODE_ENV,
     port: parsedEnv.data.PORT,
