@@ -44,12 +44,17 @@ Built for people who want:
 
 ## Preview
 
-Main UI surfaces:
+### Archive dashboard
 
-- archive dashboard with search, filters, and pagination
-- add-movie flow backed by TMDb search and detail lookup
-- movie detail modal with archive notes
-- responsive archive cards and modal flows for desktop and mobile
+![Archive dashboard](screenshots/homepage.png)
+
+### Add movie flow
+
+![Add movie flow](screenshots/movie-add.png)
+
+### Movie detail modal
+
+![Movie detail modal](screenshots/movie-detail.png)
 
 ## Quick start
 
