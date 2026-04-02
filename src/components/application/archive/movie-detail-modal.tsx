@@ -27,7 +27,7 @@ export const MovieDetailModal = ({ archiveEntry, detail, error, isLoading, onClo
                 <div className="grid gap-6">
                     <div className="rounded-3xl border border-secondary bg-secondary p-4 sm:p-5">
                         <div className="flex flex-col gap-5 sm:flex-row sm:items-start">
-                            <div className="h-32 w-24 shrink-0 overflow-hidden rounded-2xl bg-primary">
+                            <div className="h-28 w-20 shrink-0 overflow-hidden rounded-2xl bg-primary sm:h-32 sm:w-24">
                                 {movie.posterUrl ? (
                                     <img src={movie.posterUrl} alt={movie.title} className="h-full w-full object-cover" />
                                 ) : (
@@ -37,7 +37,7 @@ export const MovieDetailModal = ({ archiveEntry, detail, error, isLoading, onClo
 
                             <div className="grid min-w-0 gap-3">
                                 <div className="flex flex-wrap items-start gap-3">
-                                    <h3 className="text-3xl font-semibold text-primary">{movie.title}</h3>
+                                    <h3 className="text-2xl font-semibold text-primary sm:text-3xl">{movie.title}</h3>
                                     {voteAverage ? (
                                         <div className="rounded-full bg-primary px-3 py-1 text-sm font-semibold text-primary">TMDb rating {voteAverage}</div>
                                     ) : null}
@@ -89,13 +89,13 @@ export const MovieDetailModal = ({ archiveEntry, detail, error, isLoading, onClo
                         <p className="text-md leading-7 text-tertiary">{archiveEntry.notes || "No note added yet."}</p>
                     </div>
 
-                    <div className="flex flex-wrap gap-3">
+                    <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                         {archiveEntry.imdbUrl ? (
-                            <Button color="secondary" href={archiveEntry.imdbUrl} target="_blank" rel="noreferrer">
+                            <Button color="secondary" className="w-full sm:w-auto" href={archiveEntry.imdbUrl} target="_blank" rel="noreferrer">
                                 Open on IMDb
                             </Button>
                         ) : null}
-                        <Button color="secondary" href={archiveEntry.tmdbUrl} target="_blank" rel="noreferrer">
+                        <Button color="secondary" className="w-full sm:w-auto" href={archiveEntry.tmdbUrl} target="_blank" rel="noreferrer">
                             Open on TMDb
                         </Button>
                     </div>

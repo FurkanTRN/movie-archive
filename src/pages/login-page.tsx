@@ -56,12 +56,12 @@ export const LoginPage = () => {
     };
 
     return (
-        <div className="relative min-h-screen overflow-hidden bg-secondary px-4 py-10">
+        <div className="relative min-h-screen overflow-hidden bg-secondary px-4 py-8 sm:py-10">
             <div className="absolute inset-x-0 top-0 h-72 bg-linear-to-b from-brand-secondary/15 via-brand-secondary/5 to-transparent" />
             <div className="relative mx-auto flex min-h-[calc(100vh-5rem)] max-w-6xl items-center justify-center">
-                <section className="w-full max-w-xl rounded-[28px] border border-secondary bg-primary px-5 py-8 shadow-2xl shadow-brand-secondary/10 sm:px-8 lg:px-12">
+                <section className="w-full max-w-xl rounded-[24px] border border-secondary bg-primary px-4 py-6 shadow-2xl shadow-brand-secondary/10 sm:rounded-[28px] sm:px-8 sm:py-8 lg:px-12">
                     <div className="mt-2">
-                        <h2 className="text-display-sm font-semibold text-primary">Sign in</h2>
+                        <h2 className="text-3xl font-semibold text-primary sm:text-display-sm">Sign in</h2>
                     </div>
 
                     <form className="mt-8 grid gap-5" onSubmit={handleSubmit}>

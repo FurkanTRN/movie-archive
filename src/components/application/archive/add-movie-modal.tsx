@@ -57,14 +57,14 @@ export const AddMovieModal = ({
         <ArchiveModalShell
             title="Add movie"
             description="Search TMDb, select a movie, and save it to your archive."
-            contentClassName="lg:h-full lg:overflow-hidden"
+            contentClassName="pt-0 lg:h-full lg:overflow-hidden"
             onClose={onClose}
         >
-            <div className="grid gap-6 lg:h-full lg:min-h-0 lg:grid-cols-[0.92fr_1.08fr] lg:items-stretch">
-                <div className="grid gap-4 lg:h-full lg:min-h-0 lg:grid-rows-[auto_minmax(0,1fr)]">
+            <div className="grid gap-4 lg:h-full lg:min-h-0 lg:grid-cols-[0.92fr_1.08fr] lg:items-stretch lg:gap-6">
+                <div className="grid gap-3 lg:h-full lg:min-h-0 lg:grid-rows-[auto_minmax(0,1fr)] lg:gap-4">
                     <Input label="Search movies" placeholder="Inception, Dune, Parasite..." value={movieQuery} onChange={onMovieQueryChange} />
 
-                    <div className="scrollbar-ui rounded-2xl border border-secondary bg-secondary p-3 lg:h-full lg:min-h-0 lg:overflow-y-auto">
+                    <div className="scrollbar-ui max-h-[34vh] rounded-2xl border border-secondary bg-secondary p-3 overflow-y-auto lg:h-full lg:max-h-none lg:min-h-0">
                         {isMovieSearchLoading ? (
                             <div className="px-3 py-6 text-sm text-tertiary">Searching...</div>
                         ) : movieSearchError ? (
@@ -113,8 +113,8 @@ export const AddMovieModal = ({
                         <div className="py-20 text-center text-sm text-tertiary">Select a movie on the left to open the form.</div>
                     ) : (
                         <form className="grid gap-5" onSubmit={onSubmit}>
-                            <div className="flex gap-4">
-                                <div className="h-36 w-24 shrink-0 overflow-hidden rounded-2xl bg-primary">
+                            <div className="flex items-start gap-3 sm:gap-4">
+                                <div className="h-32 w-[5.5rem] shrink-0 overflow-hidden rounded-2xl bg-primary sm:h-36 sm:w-24">
                                     {selectedMovie.posterUrl ? (
                                         <img src={selectedMovie.posterUrl} alt={selectedMovie.title} className="h-full w-full object-cover" />
                                     ) : (
@@ -123,8 +123,8 @@ export const AddMovieModal = ({
                                 </div>
 
                                 <div className="min-w-0">
-                                    <h3 className="text-xl font-semibold text-primary">{selectedMovie.title}</h3>
-                                    <p className="mt-1 text-sm text-tertiary">
+                                    <h3 className="text-lg font-semibold text-primary sm:text-xl">{selectedMovie.title}</h3>
+                                    <p className="mt-1 text-xs text-tertiary sm:text-sm">
                                         {selectedMovie.releaseYear ?? "No year"} • {formatRuntime(selectedMovie.runtimeMinutes)}
                                     </p>
                                     {selectedMovie.genres.length > 0 && (
@@ -192,12 +192,12 @@ export const AddMovieModal = ({
                                 <div className="rounded-xl border border-error_subtle bg-error-primary px-4 py-3 text-sm text-error-primary">{movieDetailError}</div>
                             )}
 
-                            <div className="flex flex-wrap items-center gap-3">
-                                <Button size="lg" type="submit" isLoading={isLoading}>
+                            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+                                <Button size="lg" className="w-full sm:w-auto" type="submit" isLoading={isLoading}>
                                     Save to archive
                                 </Button>
                                 {selectedMovie.imdbUrl ? (
-                                    <Button color="link-color" href={selectedMovie.imdbUrl} target="_blank" rel="noreferrer">
+                                    <Button color="link-color" className="justify-start sm:justify-normal" href={selectedMovie.imdbUrl} target="_blank" rel="noreferrer">
                                         IMDb page
                                     </Button>
                                 ) : null}

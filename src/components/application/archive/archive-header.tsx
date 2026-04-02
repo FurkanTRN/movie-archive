@@ -52,21 +52,23 @@ export const ArchiveHeader = ({
     return (
         <div className="border-b border-secondary bg-primary/90 backdrop-blur">
             <div className="mx-auto flex max-w-7xl flex-col gap-5 px-4 py-5 lg:px-8">
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                    <h1 className="text-display-sm font-semibold text-primary">Movie Archive</h1>
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                    <h1 className="text-3xl font-semibold text-primary sm:text-display-sm">Movie Archive</h1>
 
-                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
-                        <ThemeToggle />
-                        <Button color="secondary" size="lg" onClick={onOpenAddMovie}>
-                            Add movie
-                        </Button>
-                        <Button color="secondary-destructive" size="lg" isLoading={authPending} onClick={onLogout}>
+                    <div className="grid gap-3 sm:flex sm:flex-wrap sm:items-center sm:justify-end">
+                        <div className="flex items-center gap-3">
+                            <ThemeToggle />
+                            <Button color="secondary" size="lg" className="min-w-0 flex-1 sm:flex-none" onClick={onOpenAddMovie}>
+                                Add movie
+                            </Button>
+                        </div>
+                        <Button color="secondary-destructive" size="lg" className="w-full sm:w-auto" isLoading={authPending} onClick={onLogout}>
                             Log out
                         </Button>
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 gap-4 rounded-3xl border border-secondary bg-secondary px-4 py-4 md:grid-cols-2 xl:grid-cols-[3fr_2fr_2fr_2fr_2fr]">
+                <div className="grid grid-cols-1 gap-3 rounded-[24px] border border-secondary bg-secondary px-3 py-3 sm:gap-4 sm:rounded-3xl sm:px-4 sm:py-4 md:grid-cols-2 xl:grid-cols-[3fr_2fr_2fr_2fr_2fr]">
                     <div className="md:col-span-2 xl:col-auto">
                         <Input label="Search archive" placeholder="Search by movie title only" value={archiveQuery} onChange={onArchiveQueryChange} />
                     </div>

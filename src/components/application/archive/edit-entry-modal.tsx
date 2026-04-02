@@ -56,11 +56,11 @@ export const EditEntryModal = ({ entry, error, fieldErrors, form, isLoading, onC
 
                 {error && <div className="rounded-xl border border-error_subtle bg-error-primary px-4 py-3 text-sm text-error-primary">{error}</div>}
 
-                <div className="flex flex-wrap gap-3">
-                    <Button size="lg" type="submit" isLoading={isLoading}>
+                <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                    <Button size="lg" className="w-full sm:w-auto" type="submit" isLoading={isLoading}>
                         Save
                     </Button>
-                    <Button color="secondary" size="lg" onClick={onClose}>
+                    <Button color="secondary" size="lg" className="w-full sm:w-auto" onClick={onClose}>
                         Cancel
                     </Button>
                 </div>
