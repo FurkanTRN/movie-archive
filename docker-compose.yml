@@ -9,7 +9,6 @@ services:
       - .env
     environment:
       BACKUP_DIR: /app/backups
-      BACKUP_TIMEZONE: ${BACKUP_TIMEZONE:-Europe/Istanbul}
       NODE_ENV: production
       PORT: 3001
     ports:
@@ -39,10 +38,8 @@ services:
       - .env
     environment:
       BACKUP_DIR: /app/backups
-      BACKUP_TIMEZONE: ${BACKUP_TIMEZONE:-Europe/Istanbul}
       NODE_ENV: production
       PORT: 3001
-      TZ: ${BACKUP_TIMEZONE:-Europe/Istanbul}
     command: ["node", "dist-server/src/scripts/run-scheduled-backup.js"]
     volumes:
       - ./backups:/app/backups

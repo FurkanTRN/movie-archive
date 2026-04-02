@@ -16,6 +16,8 @@ Built for people who want:
 - same-origin production runtime with lightweight ops
 - backups, health visibility, and straightforward local ownership
 
+> `Movie Archive` is a temporary working name. If you have a stronger name or logo direction for the project, open an issue and share it.
+
 ## Why this project
 
 - Personal-first: built for a private archive, not a bloated multi-tenant app
@@ -96,6 +98,42 @@ Default local URLs:
 
 - frontend: `http://localhost:5173`
 - backend: `http://localhost:3001`
+
+## Reverse proxy
+
+If you want to expose the app through a domain, put your reverse proxy in front of the `movie-archive` container and forward traffic to port `3001`.
+
+Set this in `.env` when running behind a reverse proxy:
+
+```env
+TRUST_PROXY=true
+```
+
+### Nginx
+
+```nginx
+server {
+    listen 80;
+    server_name movie.example.com;
+
+    location / {
+        proxy_pass http://127.0.0.1:3001;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+```
+
+### Caddy
+
+```caddy
+movie.example.com {
+    reverse_proxy 127.0.0.1:3001
+}
+```
 
 ## Quality checks
 
