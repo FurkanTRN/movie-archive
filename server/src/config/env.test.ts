@@ -8,7 +8,6 @@ const createBaseEnv = () =>
         ADMIN_PASSWORD: "change-me-now",
         APP_BASE_URL: "http://localhost:5173",
         BACKUP_DIR: "./backups",
-        BACKUP_TIMEZONE: "Europe/Istanbul",
         NODE_ENV: "development",
         PORT: "3001",
         SESSION_SECRET: "a-very-long-session-secret",

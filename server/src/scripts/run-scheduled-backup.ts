@@ -1,6 +1,5 @@
 import { createBackup, pruneBackupRetention } from "../backup/backup-utils.js";
 import { getMillisecondsUntilNextBackup, getNextBackupRunAt } from "../backup/backup-schedule.js";
-import { env } from "../config/env.js";
 import { logger } from "../lib/logger.js";
 
 const sleep = (durationMs: number) =>
@@ -12,7 +11,6 @@ const formatRunTime = (date: Date) =>
     new Intl.DateTimeFormat("en-US", {
         dateStyle: "short",
         timeStyle: "medium",
-        timeZone: env.backupTimezone,
     }).format(date);
 
 const runScheduledBackup = async () => {
@@ -24,7 +22,6 @@ const runScheduledBackup = async () => {
             event: "backup_scheduled",
             formattedNextRunAt: formatRunTime(nextRunAt),
             nextRunAt: nextRunAt.toISOString(),
-            timezone: env.backupTimezone,
             waitMs,
         });
 

@@ -1,5 +1,7 @@
 # Monitoring
 
+Movie Archive uses lightweight operational monitoring rather than a full observability stack.
+
 ## Health endpoint
 
 The application exposes:
@@ -28,9 +30,9 @@ This is enough for lightweight uptime and deploy validation.
 
 `backup.hasRecentBackup` becomes `true` when the latest backup is at most `84` hours old.
 
-## What to watch
+## Minimum checks
 
-Minimum production checks:
+For a small self-hosted install, the most important checks are:
 
 - `/api/health` returns `200`
 - container health remains `healthy`
@@ -60,7 +62,7 @@ Useful host-level checks:
 
 ## Recommended alerts
 
-Even for a small self-hosted app, these are worth having:
+If you set up host-level monitoring, these are the most useful alerts:
 
 - app health endpoint down
 - backup freshness too old

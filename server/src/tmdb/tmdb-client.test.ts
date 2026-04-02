@@ -8,7 +8,6 @@ const createBaseEnvironment = () => {
     process.env.ADMIN_PASSWORD = "change-me-now";
     process.env.APP_BASE_URL = "http://localhost:5173";
     process.env.BACKUP_DIR = "./backups";
-    process.env.BACKUP_TIMEZONE = "Europe/Istanbul";
     process.env.NODE_ENV = "test";
     process.env.PORT = "3001";
     process.env.SESSION_SECRET = "a-very-long-session-secret";

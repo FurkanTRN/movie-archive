@@ -1,6 +1,29 @@
 # Movie Archive
 
-Movie Archive is a self-hosted app for tracking watched films in a private archive.
+![MIT License](https://img.shields.io/badge/license-MIT-green.svg)
+![Node 22+](https://img.shields.io/badge/node-22%2B-339933?logo=node.js&logoColor=white)
+![Docker Compose](https://img.shields.io/badge/docker-compose-2496ED?logo=docker&logoColor=white)
+![React 19](https://img.shields.io/badge/react-19-20232a?logo=react&logoColor=61DAFB)
+![Self-Hosted](https://img.shields.io/badge/deployment-self--hosted-4f46e5)
+
+Movie Archive is a self-hosted app for building a private, searchable movie archive.
+It gives you TMDb-powered metadata, personal notes and ratings, and a simple Docker deployment without turning a personal catalog into an overbuilt system.
+
+Built for people who want:
+
+- a private movie archive instead of a social app
+- TMDb search and metadata without custom scraping
+- same-origin production runtime with lightweight ops
+- backups, health visibility, and straightforward local ownership
+
+## Why this project
+
+- Personal-first: built for a private archive, not a bloated multi-tenant app
+- Simple to run: source-based Docker deployment with persistent local data
+- Operationally honest: health endpoint, backups, startup validation, and stdout logging
+- Easy to understand: React frontend, Express backend, SQLite storage
+
+## Stack
 
 - Frontend: `React 19`, `Vite`, `Tailwind CSS v4`, `Untitled UI`
 - Backend: `Express`, `TypeScript`
@@ -17,75 +40,21 @@ Movie Archive is a self-hosted app for tracking watched films in a private archi
 - Serve frontend and API from the same origin in production
 - Persist SQLite data and automated backups with Docker
 
-## Requirements
+## Preview
 
-- Node.js `22+`
-- npm `10+`
-- Docker and Docker Compose for the containerized production flow
-- A valid and reachable `TMDB_API_KEY`
+Main UI surfaces:
 
-## Local development
+- archive dashboard with search, filters, and pagination
+- add-movie flow backed by TMDb search and detail lookup
+- movie detail modal with archive notes
+- responsive archive cards and modal flows for desktop and mobile
 
-1. Install dependencies:
+## Quick start
 
-```bash
-npm install
-```
-
-2. Create a local environment file:
+Recommended path for normal use:
 
 ```bash
 cp .env.example .env
-```
-
-3. Fill in at least these values:
-
-```env
-SESSION_SECRET=replace-with-a-long-random-secret
-TMDB_API_KEY=your-tmdb-key
-ADMIN_EMAIL=admin@example.com
-ADMIN_PASSWORD=change-me
-```
-
-The rest of the settings already have runtime defaults. Uncomment advanced overrides in `.env.example` only if you need them.
-
-The app validates `TMDB_API_KEY` against TMDb before startup. If the key is invalid or TMDb cannot be reached, the server will not start.
-
-4. Start the app:
-
-```bash
-npm run dev:full
-```
-
-Default local URLs:
-
-- frontend: `http://localhost:5173`
-- backend: `http://localhost:3001`
-
-## Quality checks
-
-```bash
-npm run lint
-npm run typecheck
-npm run test
-npm run build
-```
-
-## Docker production flow
-
-The production container serves the built frontend and the API from the same origin.
-
-1. Create `.env` from `.env.example`.
-2. Set production-safe values:
-   - `SESSION_SECRET=<long-random-secret>`
-   - `TMDB_API_KEY=<your-tmdb-key>`
-   - `ADMIN_EMAIL=<your-admin-email>`
-   - `ADMIN_PASSWORD=<your-admin-password>`
-   - uncomment `TRUST_PROXY=true` only when running behind a reverse proxy
-   - uncomment `APP_BASE_URL=...` only for split-origin local development or special proxy setups
-3. Build and start the stack:
-
-```bash
 docker compose up --build -d
 ```
 
@@ -103,30 +72,55 @@ Persistent runtime paths:
 - `./data` for SQLite files
 - `./backups` for automated backups
 
+Set at least these values in `.env` before starting:
+
+```env
+SESSION_SECRET=replace-with-a-long-random-secret
+TMDB_API_KEY=your-tmdb-key
+ADMIN_EMAIL=admin@example.com
+ADMIN_PASSWORD=change-me
+```
+
+The app validates `TMDB_API_KEY` against TMDb before startup. If the key is invalid or TMDb cannot be reached, the server will not start.
+
+## Local development
+
+Local Node/Vite development is for contributors and app development, not the primary self-hosted runtime.
+
+```bash
+npm install
+npm run dev:full
+```
+
+Default local URLs:
+
+- frontend: `http://localhost:5173`
+- backend: `http://localhost:3001`
+
+## Quality checks
+
+```bash
+npm run lint
+npm run typecheck
+npm run test
+npm run build
+```
+
 ## Environment
 
-Minimal setup requires only:
+Environment details now live in [docs/environment-variables.md](docs/environment-variables.md).
 
-- `SESSION_SECRET`
-- `TMDB_API_KEY`
-- `ADMIN_EMAIL`
-- `ADMIN_PASSWORD`
+Use `.env.example` for the default setup path, and consult the environment variables document when you need deployment-specific overrides.
 
-Optional advanced overrides are documented inline in [.env.example](/home/furkan/Projects/movie-archive-app/movie-archive/.env.example), including:
+## Operational notes
 
-- local split-origin dev settings like `APP_BASE_URL` and `VITE_API_BASE_URL`
-- runtime overrides like `PORT`, `LOG_LEVEL`, `SQLITE_DB_PATH`, and `BACKUP_DIR`
-- reverse-proxy configuration via `TRUST_PROXY`
+- startup fails fast if `TMDB_API_KEY` is missing, invalid, or TMDb is unreachable
+- production serves the frontend and `/api/*` from the same origin
+- automated backups write into `./backups`
+- health endpoint is available at `/api/health`
+- backend logs go to stdout
 
-The server will fail fast at startup if `TMDB_API_KEY` is missing, invalid, or TMDb is unreachable.
-
-Cookie behavior is automatic:
-
-- cookies are not marked `secure` in local development and tests
-- cookies are marked `secure` in production
-- the cookie name and session lifetime use the built-in defaults
-
-## Health and backups
+## Health, backups, and logging
 
 Health endpoint:
 
@@ -147,8 +141,6 @@ Automated backup behavior:
 - keeps the latest `3` backup files
 - writes into `./backups`
 
-## Logging
-
 Backend logs go to stdout:
 
 - development uses human-readable logs
@@ -159,8 +151,17 @@ Optional control:
 
 - `LOG_LEVEL=debug|info|warn|error`
 
-Additional docs:
+## Open source
 
+- License: [MIT](LICENSE)
+- Contribution guide: [CONTRIBUTING.md](CONTRIBUTING.md)
+- Project status and direction: [docs/roadmap.md](docs/roadmap.md)
+
+This repository is intended to be a practical self-hosted application, not a managed service or a generic starter kit.
+
+## Additional docs
+
+- [Environment variables](docs/environment-variables.md)
 - [Operations runbook](docs/operations.md)
 - [Backup and restore](docs/backup-and-restore.md)
 - [Monitoring](docs/monitoring.md)

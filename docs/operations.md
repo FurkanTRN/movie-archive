@@ -1,5 +1,7 @@
 # Operations Runbook
 
+Movie Archive is intended to run as a self-hosted Docker Compose application.
+
 ## Runtime model
 
 - Runtime: `Docker Compose`
@@ -9,13 +11,16 @@
 
 ## Start or update the stack
 
-Run from the project root:
+From the project root:
 
 ```bash
 docker compose up --build -d
 ```
 
-This rebuilds the app image from the local repo and starts both the app and backup sidecar.
+This rebuilds the local image and starts:
+
+- `movie-archive`
+- `movie-archive-backup`
 
 ## Useful commands
 
@@ -31,7 +36,13 @@ View logs:
 docker compose logs --tail=200
 ```
 
-The app writes structured JSON logs in production and human-readable logs in development. Every request log includes a request ID that is also returned as `X-Request-Id` in API responses.
+Show app logs only:
+
+```bash
+docker compose logs --tail=200 movie-archive
+```
+
+The app writes structured JSON logs in production and human-readable logs in development. Each request log includes a request ID that also appears in the `X-Request-Id` response header.
 
 Restart app:
 
@@ -60,7 +71,7 @@ docker compose up -d
 
 ## Rollback
 
-Rollback uses your last known-good source revision plus the persisted `./data` directory.
+Rollback uses a previously known-good source revision plus the persisted runtime data.
 
 ```bash
 git checkout <known-good-commit-or-tag>
@@ -80,7 +91,8 @@ If the app is up but unhealthy:
 
 - inspect container logs
 - inspect `movie-archive-backup` logs if backup freshness is stale
-- verify `SESSION_SECRET`, `TMDB_API_KEY`, and `APP_BASE_URL`
+- verify `SESSION_SECRET` and `TMDB_API_KEY`
+- verify `TRUST_PROXY=true` only if you are behind a reverse proxy
 - verify `LOG_LEVEL` only if logs are unexpectedly too quiet
 - verify the SQLite path is writable
 - check free disk space on the server
@@ -90,3 +102,4 @@ If the app does not start at all:
 - verify `TMDB_API_KEY` is valid
 - verify the host can reach `api.themoviedb.org`
 - inspect startup logs for TMDb configuration validation failures
+- verify `SESSION_SECRET` is set and production-safe
