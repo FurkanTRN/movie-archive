@@ -42,14 +42,14 @@ interface FormState {
 }
 
 const sortOptions = [
-    { label: "Son güncellenen", value: "recent" },
-    { label: "Başlığa göre", value: "title" },
-    { label: "Film yılına göre (Yeni -> Eski)", value: "releaseYearDesc" },
-    { label: "Kişisel puana göre", value: "rating" },
-    { label: "İzleme tarihine göre", value: "watchedAt" },
+    { label: "Recently updated", value: "recent" },
+    { label: "Title", value: "title" },
+    { label: "Release year (Newest to oldest)", value: "releaseYearDesc" },
+    { label: "Personal rating", value: "rating" },
+    { label: "Watched date", value: "watchedAt" },
 ];
 
-const ratingFilterOptions = [{ label: "Tüm puanlar", value: "all" }, ...Array.from({ length: 10 }, (_, index) => ({ label: `${index + 1}+`, value: String(index + 1) }))];
+const ratingFilterOptions = [{ label: "All ratings", value: "all" }, ...Array.from({ length: 10 }, (_, index) => ({ label: `${index + 1}+`, value: String(index + 1) }))];
 
 const initialFormState: FormState = {
     isWatchedDateUnknown: false,
@@ -84,10 +84,22 @@ const LazyMovieDetailModal = lazy(async () => {
     const module = await import("@/components/application/archive/movie-detail-modal");
     return { default: module.MovieDetailModal };
 });
+const LazyImagePreviewModal = lazy(async () => {
+    const module = await import("@/components/application/archive/image-preview-modal");
+    return { default: module.ImagePreviewModal };
+});
+
+type ArchivePreviewImageKind = "backdrop" | "poster";
+
+interface ArchiveImagePreviewState {
+    entry: ArchiveEntry;
+    imageKind: ArchivePreviewImageKind;
+    imageUrl: string;
+}
 
 const modalFallback = (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-overlay/40 px-4">
-        <div className="rounded-2xl border border-secondary bg-primary px-4 py-3 text-sm text-tertiary shadow-xs">Yükleniyor...</div>
+        <div className="rounded-2xl border border-secondary bg-primary px-4 py-3 text-sm text-tertiary shadow-xs">Loading...</div>
     </div>
 );
 
@@ -128,6 +140,7 @@ export const ArchivePage = () => {
     const [detailMovie, setDetailMovie] = useState<MovieDetail | null>(null);
     const [detailLoading, setDetailLoading] = useState(false);
     const [detailError, setDetailError] = useState<string | null>(null);
+    const [imagePreview, setImagePreview] = useState<ArchiveImagePreviewState | null>(null);
     const movieDetailCacheRef = useRef(new Map<number, MovieDetail>());
     const movieSearchAbortRef = useRef<AbortController | null>(null);
 
@@ -168,7 +181,7 @@ export const ArchivePage = () => {
                 setPage(response.pagination.page);
             }
         } catch (error) {
-            setArchiveError(error instanceof ApiError ? error.message : "Arşiv yüklenemedi");
+            setArchiveError(error instanceof ApiError ? error.message : "Failed to load archive");
         } finally {
             setArchiveLoading(false);
         }
@@ -180,11 +193,11 @@ export const ArchivePage = () => {
 
     const yearOptions = useMemo(() => {
         const years = buildUniqueValues(availableYears.map((value) => String(value)));
-        return [{ label: "Tüm yıllar", value: "all" }, ...years.map((year) => ({ label: year, value: year }))];
+        return [{ label: "All years", value: "all" }, ...years.map((year) => ({ label: year, value: year }))];
     }, [availableYears]);
 
     const genreOptions = useMemo(() => {
-        return [{ label: "Tüm türler", value: "all" }, ...availableGenres.map((genre) => ({ label: genre, value: genre }))];
+        return [{ label: "All genres", value: "all" }, ...availableGenres.map((genre) => ({ label: genre, value: genre }))];
     }, [availableGenres]);
 
     useEffect(() => {
@@ -219,7 +232,7 @@ export const ArchivePage = () => {
                     return;
                 }
 
-                setMovieSearchError(error instanceof ApiError ? error.message : "Film araması başarısız");
+                setMovieSearchError(error instanceof ApiError ? error.message : "Movie search failed");
             } finally {
                 if (movieSearchAbortRef.current === abortController) {
                     movieSearchAbortRef.current = null;
@@ -265,7 +278,7 @@ export const ArchivePage = () => {
             movieDetailCacheRef.current.set(tmdbId, response.movie);
             setSelectedMovie(response.movie);
         } catch (error) {
-            setMovieDetailError(error instanceof ApiError ? error.message : "Film detayı alınamadı");
+            setMovieDetailError(error instanceof ApiError ? error.message : "Failed to load movie details");
         } finally {
             setMovieDetailLoading(false);
         }
@@ -316,7 +329,7 @@ export const ArchivePage = () => {
                 return;
             }
 
-            setMovieDetailError(error instanceof ApiError ? error.message : "Arşive eklenemedi");
+            setMovieDetailError(error instanceof ApiError ? error.message : "Failed to add the movie to the archive");
         } finally {
             setSaveLoading(false);
         }
@@ -374,7 +387,7 @@ export const ArchivePage = () => {
                 return;
             }
 
-            setEditError(error instanceof ApiError ? error.message : "Kayıt güncellenemedi");
+            setEditError(error instanceof ApiError ? error.message : "Failed to update the entry");
         } finally {
             setEditLoading(false);
         }
@@ -399,7 +412,7 @@ export const ArchivePage = () => {
             setPendingDeleteEntry(null);
             await loadArchive(page);
         } catch (error) {
-            setArchiveError(error instanceof ApiError ? error.message : "Kayıt silinemedi");
+            setArchiveError(error instanceof ApiError ? error.message : "Failed to delete the entry");
         } finally {
             setDeleteLoading(false);
         }
@@ -425,17 +438,31 @@ export const ArchivePage = () => {
             movieDetailCacheRef.current.set(entry.tmdbId, response.movie);
             setDetailMovie(response.movie);
         } catch (error) {
-            setDetailError(error instanceof ApiError ? error.message : "Film detayları alınamadı");
+            setDetailError(error instanceof ApiError ? error.message : "Failed to load movie details");
         } finally {
             setDetailLoading(false);
         }
+    };
+
+    const handleOpenImagePreview = (entry: ArchiveEntry, imageKind: ArchivePreviewImageKind) => {
+        const imageUrl = imageKind === "backdrop" ? entry.backdropUrl : entry.posterUrl;
+
+        if (!imageUrl) {
+            return;
+        }
+
+        setImagePreview({
+            entry,
+            imageKind,
+            imageUrl,
+        });
     };
 
     const handleLogout = async () => {
         try {
             await logout();
         } catch (error) {
-            setArchiveError(error instanceof ApiError ? error.message : "Çıkış yapılamadı");
+            setArchiveError(error instanceof ApiError ? error.message : "Failed to log out");
         }
     };
 
@@ -481,14 +508,14 @@ export const ArchivePage = () => {
                 {archiveError && <div className="mb-6 rounded-2xl border border-error_subtle bg-error-primary px-4 py-3 text-sm text-error-primary">{archiveError}</div>}
 
                 {archiveLoading ? (
-                    <div className="rounded-[28px] border border-secondary bg-primary px-6 py-10 text-center text-md text-tertiary shadow-xs">Arşiv yükleniyor...</div>
+                    <div className="rounded-[28px] border border-secondary bg-primary px-6 py-10 text-center text-md text-tertiary shadow-xs">Loading archive...</div>
                 ) : archiveEntries.length === 0 ? (
                     <div className="rounded-[28px] border border-dashed border-secondary bg-primary px-6 py-14 text-center shadow-xs">
-                        <h2 className="text-xl font-semibold text-primary">Henüz burada bir şey yok</h2>
-                        <p className="mt-3 text-md text-tertiary">İlk filmi ekleyip kişisel arşivini oluşturmaya başla.</p>
+                        <h2 className="text-xl font-semibold text-primary">Nothing here yet</h2>
+                        <p className="mt-3 text-md text-tertiary">Add your first movie to start building your personal archive.</p>
                         <div className="mt-6">
                             <Button size="lg" onClick={() => setAddMovieOpen(true)}>
-                                İlk filmi ekle
+                                Add your first movie
                             </Button>
                         </div>
                     </div>
@@ -502,6 +529,7 @@ export const ArchivePage = () => {
                                     onDelete={() => void handleDeleteEntry(entry.id)}
                                     onEdit={handleOpenEdit}
                                     onOpenDetail={(value) => void handleOpenDetail(value)}
+                                    onOpenImagePreview={handleOpenImagePreview}
                                 />
                             ))}
                         </div>
@@ -591,6 +619,17 @@ export const ArchivePage = () => {
                             setDetailMovie(null);
                             setDetailError(null);
                         }}
+                    />
+                </Suspense>
+            )}
+
+            {imagePreview && (
+                <Suspense fallback={modalFallback}>
+                    <LazyImagePreviewModal
+                        entry={imagePreview.entry}
+                        imageKind={imagePreview.imageKind}
+                        imageUrl={imagePreview.imageUrl}
+                        onClose={() => setImagePreview(null)}
                     />
                 </Suspense>
             )}

@@ -5,7 +5,7 @@ export const parseWithSchema = <TSchema extends z.ZodTypeAny>(schema: TSchema, i
     const result = schema.safeParse(input);
 
     if (!result.success) {
-        throw toValidationError(result.error.issues[0]?.message ?? "Geçersiz istek verisi gönderildi");
+        throw toValidationError(result.error.issues[0]?.message ?? "Invalid request data");
     }
 
     return result.data;

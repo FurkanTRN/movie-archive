@@ -25,7 +25,7 @@ export const DatePicker = ({ value: valueProp, defaultValue, onChange, onApply, 
     });
     const [value, setValue] = useControlledState(valueProp, defaultValue || null, onChange);
 
-    const formattedDate = value ? formatter.format(value.toDate(getLocalTimeZone())) : "Tarih seç";
+    const formattedDate = value ? formatter.format(value.toDate(getLocalTimeZone())) : "Select date";
 
     return (
         <AriaDatePicker shouldCloseOnSelect={false} {...props} value={value} onChange={setValue}>
@@ -62,7 +62,7 @@ export const DatePicker = ({ value: valueProp, defaultValue, onChange, onApply, 
                                         close();
                                     }}
                                 >
-                                    İptal
+                                    Cancel
                                 </Button>
                                 <Button
                                     size="md"
@@ -72,7 +72,7 @@ export const DatePicker = ({ value: valueProp, defaultValue, onChange, onApply, 
                                         close();
                                     }}
                                 >
-                                    Uygula
+                                    Apply
                                 </Button>
                             </div>
                         </>

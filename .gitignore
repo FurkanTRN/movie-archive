@@ -26,4 +26,9 @@ dist-ssr
 .env
 .env.*
 !.env.example
-data
+/backups/*
+!/backups/.gitkeep
+/coverage
+/data/*
+!/data/.gitkeep
+.codex

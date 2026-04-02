@@ -6,18 +6,27 @@ interface ArchiveCardProps {
     entry: ArchiveEntry;
     onDelete: (entryId: number) => void;
     onOpenDetail: (entry: ArchiveEntry) => void;
+    onOpenImagePreview: (entry: ArchiveEntry, imageKind: "backdrop" | "poster") => void;
     onEdit: (entry: ArchiveEntry) => void;
 }
 
-export const ArchiveCard = ({ entry, onDelete, onEdit, onOpenDetail }: ArchiveCardProps) => {
+export const ArchiveCard = ({ entry, onDelete, onEdit, onOpenDetail, onOpenImagePreview }: ArchiveCardProps) => {
     return (
         <article className="overflow-hidden rounded-[28px] border border-secondary bg-primary shadow-xs">
             <div className="h-40 bg-secondary">
                 {entry.backdropUrl ? (
-                    <img src={entry.backdropUrl} alt={entry.title} className="h-full w-full object-cover" />
+                    <button
+                        type="button"
+                        className="group relative h-full w-full cursor-pointer overflow-hidden outline-focus-ring transition duration-100 ease-linear focus-visible:outline-2 focus-visible:outline-offset-0"
+                        aria-label="Open backdrop preview"
+                        onClick={() => onOpenImagePreview(entry, "backdrop")}
+                    >
+                        <img src={entry.backdropUrl} alt={entry.title} className="h-full w-full object-cover transition duration-100 ease-linear group-hover:scale-[1.02]" />
+                        <div className="absolute inset-0 bg-alpha-black/0 transition duration-100 ease-linear group-hover:bg-alpha-black/10" />
+                    </button>
                 ) : (
                     <div className="flex h-full items-center justify-center bg-[radial-gradient(circle_at_top,rgba(47,116,255,0.18),transparent_40%),linear-gradient(135deg,rgba(17,24,39,0.06),transparent)] text-sm font-semibold text-tertiary">
-                        Görsel yok
+                        No image
                     </div>
                 )}
             </div>
@@ -26,9 +35,20 @@ export const ArchiveCard = ({ entry, onDelete, onEdit, onOpenDetail }: ArchiveCa
                 <div className="flex gap-4">
                     <div className="h-28 w-20 shrink-0 overflow-hidden rounded-2xl bg-secondary">
                         {entry.posterUrl ? (
-                            <img src={entry.posterUrl} alt={entry.title} className="h-full w-full object-cover" />
+                            <button
+                                type="button"
+                                className="group h-full w-full cursor-pointer overflow-hidden outline-focus-ring transition duration-100 ease-linear focus-visible:outline-2 focus-visible:outline-offset-0"
+                                aria-label="Open poster preview"
+                                onClick={() => onOpenImagePreview(entry, "poster")}
+                            >
+                                <img
+                                    src={entry.posterUrl}
+                                    alt={entry.title}
+                                    className="h-full w-full object-cover transition duration-100 ease-linear group-hover:scale-[1.02]"
+                                />
+                            </button>
                         ) : (
-                            <div className="flex h-full items-center justify-center text-xs text-tertiary">Poster yok</div>
+                            <div className="flex h-full items-center justify-center text-xs text-tertiary">No poster</div>
                         )}
                     </div>
 
@@ -43,7 +63,7 @@ export const ArchiveCard = ({ entry, onDelete, onEdit, onOpenDetail }: ArchiveCa
                                     {entry.title}
                                 </button>
                                 <p className="mt-1 text-sm text-tertiary">
-                                    {entry.releaseYear ?? "Yıl yok"} • {formatRuntime(entry.runtimeMinutes)}
+                                    {entry.releaseYear ?? "No year"} • {formatRuntime(entry.runtimeMinutes)}
                                 </p>
                             </div>
                             {entry.personalRating ? (
@@ -65,7 +85,7 @@ export const ArchiveCard = ({ entry, onDelete, onEdit, onOpenDetail }: ArchiveCa
 
                 <div className="grid gap-3">
                     <div className="grid gap-1 text-sm">
-                        <span className="font-medium text-secondary">İzleme tarihi</span>
+                        <span className="font-medium text-secondary">Watched date</span>
                         <span className="text-tertiary">{formatDate(entry.watchedAt)}</span>
                     </div>
                 </div>
@@ -78,7 +98,7 @@ export const ArchiveCard = ({ entry, onDelete, onEdit, onOpenDetail }: ArchiveCa
                         onSelectionChange={() => undefined}
                     >
                         <ButtonGroupItem id={`edit-${entry.id}`} onClick={() => onEdit(entry)}>
-                            Düzenle
+                            Edit
                         </ButtonGroupItem>
                         {entry.imdbUrl ? (
                             <ButtonGroupItem id={`imdb-${entry.id}`} onClick={() => window.open(entry.imdbUrl ?? "", "_blank", "noopener,noreferrer")}>
@@ -86,7 +106,7 @@ export const ArchiveCard = ({ entry, onDelete, onEdit, onOpenDetail }: ArchiveCa
                             </ButtonGroupItem>
                         ) : null}
                         <ButtonGroupItem id={`delete-${entry.id}`} className="text-error-primary" onClick={() => onDelete(entry.id)}>
-                            Sil
+                            Delete
                         </ButtonGroupItem>
                     </ButtonGroup>
                 </div>

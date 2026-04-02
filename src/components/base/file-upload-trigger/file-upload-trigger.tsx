@@ -63,7 +63,7 @@ export const FileTrigger = (props: FileTriggerProps) => {
                 onChange={(e) => onSelect?.(e.target.files)}
                 capture={defaultCamera}
                 multiple={allowsMultiple}
-                // @ts-expect-error
+                // @ts-expect-error non-standard attribute used to enable directory selection in WebKit browsers.
                 webkitdirectory={acceptDirectory ? "" : undefined}
             />
         </>

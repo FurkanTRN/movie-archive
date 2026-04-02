@@ -2,10 +2,10 @@ import type { Request } from "express";
 import { Router } from "express";
 import { requireAuth } from "../auth/auth-middleware.js";
 import { verifyPassword } from "../auth/password.js";
-import { env } from "../config/env.js";
 import { userRepository } from "../database/user-repository.js";
+import { logger } from "../lib/logger.js";
 import { AppError } from "../middleware/error-handler.js";
-import { sessionClearCookieOptions } from "../middleware/session-middleware.js";
+import { sessionClearCookieOptions, sessionRuntimeInfo } from "../middleware/session-middleware.js";
 import { loginBodySchema } from "../validation/auth-schemas.js";
 import { parseWithSchema } from "../validation/parse-with-schema.js";
 
@@ -44,15 +44,24 @@ authRouter.post("/login", async (request, response, next) => {
         const user = userRepository.findUserByEmail(normalizeEmail(email));
 
         if (!user) {
-            console.warn("Kimlik doğrulama başarısız: kullanıcı bulunamadı");
-            throw new AppError("E-posta veya şifre hatalı", 401);
+            logger.warn("Authentication failed", {
+                event: "auth_login_failed",
+                reason: "user_not_found",
+                requestId: request.requestId,
+            });
+            throw new AppError("Email or password is incorrect", 401);
         }
 
         const isPasswordValid = await verifyPassword(password, user.passwordHash);
 
         if (!isPasswordValid) {
-            console.warn("Kimlik doğrulama başarısız: parola eşleşmedi");
-            throw new AppError("E-posta veya şifre hatalı", 401);
+            logger.warn("Authentication failed", {
+                event: "auth_login_failed",
+                reason: "password_mismatch",
+                requestId: request.requestId,
+                userId: user.id,
+            });
+            throw new AppError("Email or password is incorrect", 401);
         }
 
         await runSessionRegenerate(request);
@@ -62,7 +71,11 @@ authRouter.post("/login", async (request, response, next) => {
             id: user.id,
         };
 
-        console.info("Kimlik doğrulama başarılı: oturum yenilendi");
+        logger.info("Authentication succeeded", {
+            event: "auth_login_succeeded",
+            requestId: request.requestId,
+            userId: user.id,
+        });
 
         response.json({
             user: request.session.user,
@@ -75,12 +88,16 @@ authRouter.post("/login", async (request, response, next) => {
 authRouter.post("/logout", requireAuth, (request, response, next) => {
     destroySession(request)
         .then(() => {
-            response.clearCookie(env.sessionCookieName, sessionClearCookieOptions);
-            console.info("Oturum kapatma başarılı");
+            response.clearCookie(sessionRuntimeInfo.cookieName, sessionClearCookieOptions);
+            logger.info("Logout succeeded", {
+                event: "auth_logout_succeeded",
+                requestId: request.requestId,
+                userId: request.session.user?.id ?? null,
+            });
             response.status(204).send();
         })
         .catch(() => {
-            next(new AppError("Oturum kapatılamadı", 500));
+            next(new AppError("Failed to log out", 500));
         });
 });
 

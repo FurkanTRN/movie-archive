@@ -4,7 +4,7 @@ import { AppError } from "../middleware/error-handler.js";
 
 export const requireAuth = (request: Request, _response: Response, next: NextFunction) => {
     if (!request.session.user) {
-        next(new AppError("Oturum açmanız gerekiyor", 401));
+        next(new AppError("You must be signed in", 401));
         return;
     }
 
@@ -12,7 +12,7 @@ export const requireAuth = (request: Request, _response: Response, next: NextFun
 
     if (!user) {
         request.session.destroy(() => undefined);
-        next(new AppError("Oturum açmanız gerekiyor", 401));
+        next(new AppError("You must be signed in", 401));
         return;
     }
 

@@ -51,7 +51,7 @@ export const LoginPage = () => {
                 return;
             }
 
-            setError(submitError instanceof ApiError ? submitError.message : "Giriş başarısız");
+            setError(submitError instanceof ApiError ? submitError.message : "Sign-in failed");
         }
     };
 
@@ -61,12 +61,12 @@ export const LoginPage = () => {
             <div className="relative mx-auto flex min-h-[calc(100vh-5rem)] max-w-6xl items-center justify-center">
                 <section className="w-full max-w-xl rounded-[28px] border border-secondary bg-primary px-5 py-8 shadow-2xl shadow-brand-secondary/10 sm:px-8 lg:px-12">
                     <div className="mt-2">
-                        <h2 className="text-display-sm font-semibold text-primary">Giriş yap</h2>
+                        <h2 className="text-display-sm font-semibold text-primary">Sign in</h2>
                     </div>
 
                     <form className="mt-8 grid gap-5" onSubmit={handleSubmit}>
                         <Input
-                            label="E-posta"
+                            label="Email"
                             placeholder="user@example.com"
                             value={email}
                             onChange={setEmail}
@@ -74,7 +74,7 @@ export const LoginPage = () => {
                             hint={fieldErrors.email}
                         />
                         <Input
-                            label="Şifre"
+                            label="Password"
                             placeholder="••••••••"
                             type="password"
                             value={password}
@@ -86,7 +86,7 @@ export const LoginPage = () => {
                         {error && <div className="rounded-xl border border-error_subtle bg-error-primary px-4 py-3 text-sm text-error-primary">{error}</div>}
 
                         <Button size="lg" type="submit" isLoading={isPending}>
-                            Giriş yap
+                            Sign in
                         </Button>
                     </form>
                 </section>

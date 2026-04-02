@@ -1,87 +1,57 @@
 # Movie Archive
 
-Self-hosted personal movie archive application.
+Movie Archive is a self-hosted app for tracking watched films in a private archive.
 
-- Frontend: `React 19 + Vite + Untitled UI`
-- Backend: `Express + TypeScript`
+- Frontend: `React 19`, `Vite`, `Tailwind CSS v4`, `Untitled UI`
+- Backend: `Express`, `TypeScript`
 - Database: `SQLite`
 - Auth: `server-side session`
-- Metadata: `TMDb`
-- Deployment: `Docker Compose + Woodpecker`
+- Metadata provider: `TMDb`
+- Runtime: `Docker Compose` or local Node.js
 
-## What It Does
+## Features
 
-- Search movies from TMDb
-- Add watched movies into a personal archive
-- Edit watched date, personal rating, and notes
-- View movie details in a modal
-- Filter, sort, and paginate archive entries
-- Run same-origin production deployment behind a reverse proxy
-- Create automatic SQLite backups with a backup sidecar container
+- Search TMDb and add movies into a personal archive
+- Track watched date, rating, and notes
+- Browse archive entries with filtering, sorting, and pagination
+- Serve frontend and API from the same origin in production
+- Persist SQLite data and automated backups with Docker
 
-## Stack
+## Requirements
 
-### Frontend
+- Node.js `22+`
+- npm `10+`
+- Docker and Docker Compose for the containerized production flow
+- A valid and reachable `TMDB_API_KEY`
 
-- `React`
-- `TypeScript`
-- `Vite`
-- `Tailwind CSS v4`
-- `react-aria-components`
-- `Untitled UI`
+## Local development
 
-### Backend
-
-- `Express`
-- `TypeScript`
-- `better-sqlite3`
-- `express-session`
-- `zod`
-
-## Project Structure
-
-```text
-src/                 frontend app
-server/src/          backend app
-docs/                roadmap and operations docs
-docker-compose.yml   production runtime
-Dockerfile           production image
-```
-
-## Local Development
-
-### 1. Install
+1. Install dependencies:
 
 ```bash
 npm install
 ```
 
-### 2. Create env file
+2. Create a local environment file:
 
-Copy `.env.example` to `.env` and fill in at least:
+```bash
+cp .env.example .env
+```
+
+3. Fill in at least these values:
 
 ```env
-SESSION_SECRET=your-dev-secret
+SESSION_SECRET=replace-with-a-long-random-secret
 TMDB_API_KEY=your-tmdb-key
 ADMIN_EMAIL=admin@example.com
 ADMIN_PASSWORD=change-me
 ```
 
-### 3. Run the app
+The rest of the settings already have runtime defaults. Uncomment advanced overrides in `.env.example` only if you need them.
 
-Frontend only:
+The app validates `TMDB_API_KEY` against TMDb before startup. If the key is invalid or TMDb cannot be reached, the server will not start.
 
-```bash
-npm run dev:client
-```
-
-Backend only:
-
-```bash
-npm run dev:server
-```
-
-Frontend + backend together:
+4. Start the app:
 
 ```bash
 npm run dev:full
@@ -92,60 +62,31 @@ Default local URLs:
 - frontend: `http://localhost:5173`
 - backend: `http://localhost:3001`
 
-## Build
-
-Build everything:
+## Quality checks
 
 ```bash
+npm run lint
+npm run typecheck
+npm run test
 npm run build
 ```
 
-Build frontend only:
+## Docker production flow
+
+The production container serves the built frontend and the API from the same origin.
+
+1. Create `.env` from `.env.example`.
+2. Set production-safe values:
+   - `SESSION_SECRET=<long-random-secret>`
+   - `TMDB_API_KEY=<your-tmdb-key>`
+   - `ADMIN_EMAIL=<your-admin-email>`
+   - `ADMIN_PASSWORD=<your-admin-password>`
+   - uncomment `TRUST_PROXY=true` only when running behind a reverse proxy
+   - uncomment `APP_BASE_URL=...` only for split-origin local development or special proxy setups
+3. Build and start the stack:
 
 ```bash
-npm run build:client
-```
-
-Build backend only:
-
-```bash
-npm run build:server
-```
-
-## Environment
-
-Important env variables:
-
-- `PORT`
-- `APP_BASE_URL`
-- `NODE_ENV`
-- `SQLITE_DB_PATH`
-- `BACKUP_DIR`
-- `BACKUP_TIMEZONE`
-- `SESSION_SECRET`
-- `SESSION_COOKIE_NAME`
-- `SESSION_MAX_AGE_MS`
-- `TRUST_PROXY`
-- `COOKIE_SECURE_AUTO`
-- `TMDB_API_KEY`
-- `ADMIN_EMAIL`
-- `ADMIN_PASSWORD`
-
-See [.env.example](.env.example) for the full template.
-
-## Production
-
-The production image serves the built frontend and the API from the same origin.
-
-Main files:
-
-- [Dockerfile](Dockerfile)
-- [docker-compose.yml](docker-compose.yml)
-
-Run locally with Docker:
-
-```bash
-docker compose up -d
+docker compose up --build -d
 ```
 
 Useful commands:
@@ -153,12 +94,45 @@ Useful commands:
 ```bash
 docker compose ps
 docker compose logs --tail=200
+docker compose logs --tail=200 movie-archive
 docker compose logs --tail=200 movie-archive-backup
 ```
 
-## Backups
+Persistent runtime paths:
 
-There are two backup paths:
+- `./data` for SQLite files
+- `./backups` for automated backups
+
+## Environment
+
+Minimal setup requires only:
+
+- `SESSION_SECRET`
+- `TMDB_API_KEY`
+- `ADMIN_EMAIL`
+- `ADMIN_PASSWORD`
+
+Optional advanced overrides are documented inline in [.env.example](/home/furkan/Projects/movie-archive-app/movie-archive/.env.example), including:
+
+- local split-origin dev settings like `APP_BASE_URL` and `VITE_API_BASE_URL`
+- runtime overrides like `PORT`, `LOG_LEVEL`, `SQLITE_DB_PATH`, and `BACKUP_DIR`
+- reverse-proxy configuration via `TRUST_PROXY`
+
+The server will fail fast at startup if `TMDB_API_KEY` is missing, invalid, or TMDb is unreachable.
+
+Cookie behavior is automatic:
+
+- cookies are not marked `secure` in local development and tests
+- cookies are marked `secure` in production
+- the cookie name and session lifetime use the built-in defaults
+
+## Health and backups
+
+Health endpoint:
+
+```text
+/api/health
+```
 
 Manual backup:
 
@@ -166,48 +140,29 @@ Manual backup:
 npm run backup:create
 ```
 
-Production automated backup:
+Automated backup behavior:
 
 - handled by `movie-archive-backup`
 - runs every `72` hours
 - keeps the latest `3` backup files
 - writes into `./backups`
 
-Details:
+## Logging
 
-- [backup-and-restore.md](docs/backup-and-restore.md)
-- [monitoring.md](docs/monitoring.md)
+Backend logs go to stdout:
 
-## Deployment
+- development uses human-readable logs
+- production uses structured JSON logs
+- every request includes an `X-Request-Id` response header and matching request log metadata
 
-Production deploys are image-based and use Woodpecker.
+Optional control:
 
-- registry: `rg.furkantrn.com/movie-archive`
-- deploy model: immutable commit SHA
-- deploy target: same VDS runtime with Docker socket access
+- `LOG_LEVEL=debug|info|warn|error`
 
-Operational details:
+Additional docs:
 
-- [operations.md](docs/operations.md)
-
-## Health Check
-
-The app exposes:
-
-```text
-/api/health
-```
-
-It includes:
-
-- database path and existence checks
-- session runtime info
-- backup directory and latest backup freshness
-- uptime and timestamp
-
-## Docs
-
-- [roadmap.md](docs/roadmap.md)
-- [operations.md](docs/operations.md)
-- [backup-and-restore.md](docs/backup-and-restore.md)
-- [monitoring.md](docs/monitoring.md)
+- [Operations runbook](docs/operations.md)
+- [Backup and restore](docs/backup-and-restore.md)
+- [Monitoring](docs/monitoring.md)
+- [Roadmap](docs/roadmap.md)
+- [Contributing](CONTRIBUTING.md)

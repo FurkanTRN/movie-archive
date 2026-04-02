@@ -44,7 +44,7 @@ const MobilePagination = ({ page = 1, total = 10, className, onPageChange }: Mob
     return (
         <nav aria-label="Pagination" className={cx("flex items-center justify-between md:hidden", className)}>
             <Button
-                aria-label="Önceki sayfaya git"
+                aria-label="Go to previous page"
                 iconLeading={ArrowLeft}
                 color="secondary"
                 size="sm"
@@ -56,7 +56,7 @@ const MobilePagination = ({ page = 1, total = 10, className, onPageChange }: Mob
             </span>
 
             <Button
-                aria-label="Sonraki sayfaya git"
+                aria-label="Go to next page"
                 iconLeading={ArrowRight}
                 color="secondary"
                 size="sm"
@@ -79,14 +79,14 @@ export const PaginationPageDefault = ({ rounded, page = 1, total = 10, className
             <div className="hidden flex-1 justify-start md:flex">
                 <Pagination.PrevTrigger asChild>
                     <Button iconLeading={ArrowLeft} color="link-gray" size="sm">
-                        {isDesktop ? "Önceki" : undefined}{" "}
+                        {isDesktop ? "Previous" : undefined}{" "}
                     </Button>
                 </Pagination.PrevTrigger>
             </div>
 
             <Pagination.PrevTrigger asChild className="md:hidden">
                 <Button iconLeading={ArrowLeft} color="secondary" size="sm">
-                    {isDesktop ? "Önceki" : undefined}
+                    {isDesktop ? "Previous" : undefined}
                 </Button>
             </Pagination.PrevTrigger>
 
@@ -115,13 +115,13 @@ export const PaginationPageDefault = ({ rounded, page = 1, total = 10, className
             <div className="hidden flex-1 justify-end md:flex">
                 <Pagination.NextTrigger asChild>
                     <Button iconTrailing={ArrowRight} color="link-gray" size="sm">
-                        {isDesktop ? "Sonraki" : undefined}
+                        {isDesktop ? "Next" : undefined}
                     </Button>
                 </Pagination.NextTrigger>
             </div>
             <Pagination.NextTrigger asChild className="md:hidden">
                 <Button iconTrailing={ArrowRight} color="secondary" size="sm">
-                    {isDesktop ? "Sonraki" : undefined}
+                    {isDesktop ? "Next" : undefined}
                 </Button>
             </Pagination.NextTrigger>
         </Pagination.Root>
@@ -141,7 +141,7 @@ export const PaginationPageMinimalCenter = ({ rounded, page = 1, total = 10, cla
             <div className="flex flex-1 justify-start">
                 <Pagination.PrevTrigger asChild>
                     <Button iconLeading={ArrowLeft} color="secondary" size="sm">
-                        {isDesktop ? "Önceki" : undefined}
+                        {isDesktop ? "Previous" : undefined}
                     </Button>
                 </Pagination.PrevTrigger>
             </div>
@@ -171,7 +171,7 @@ export const PaginationPageMinimalCenter = ({ rounded, page = 1, total = 10, cla
             <div className="flex flex-1 justify-end">
                 <Pagination.NextTrigger asChild>
                     <Button iconTrailing={ArrowRight} color="secondary" size="sm">
-                        {isDesktop ? "Sonraki" : undefined}
+                        {isDesktop ? "Next" : undefined}
                     </Button>
                 </Pagination.NextTrigger>
             </div>
@@ -192,7 +192,7 @@ export const PaginationCardDefault = ({ rounded, page = 1, total = 10, ...props 
             <div className="flex flex-1 justify-start">
                 <Pagination.PrevTrigger asChild>
                     <Button iconLeading={ArrowLeft} color="secondary" size="sm">
-                        {isDesktop ? "Önceki" : undefined}
+                        {isDesktop ? "Previous" : undefined}
                     </Button>
                 </Pagination.PrevTrigger>
             </div>
@@ -222,7 +222,7 @@ export const PaginationCardDefault = ({ rounded, page = 1, total = 10, ...props 
             <div className="flex flex-1 justify-end">
                 <Pagination.NextTrigger asChild>
                     <Button iconTrailing={ArrowRight} color="secondary" size="sm">
-                        {isDesktop ? "Sonraki" : undefined}
+                        {isDesktop ? "Next" : undefined}
                     </Button>
                 </Pagination.NextTrigger>
             </div>
@@ -251,7 +251,7 @@ export const PaginationCardMinimal = ({ page = 1, total = 10, align = "left", on
             <nav aria-label="Pagination" className={cx("hidden items-center gap-3 md:flex", align === "center" && "justify-between")}>
                 <div className={cx(align === "center" && "flex flex-1 justify-start")}>
                     <Button isDisabled={page === 1} color="secondary" size="sm" onClick={() => onPageChange?.(Math.max(0, page - 1))}>
-                        Önceki
+                        Previous
                     </Button>
                 </div>
 
@@ -267,7 +267,7 @@ export const PaginationCardMinimal = ({ page = 1, total = 10, align = "left", on
 
                 <div className={cx(align === "center" && "flex flex-1 justify-end")}>
                     <Button isDisabled={page === total} color="secondary" size="sm" onClick={() => onPageChange?.(Math.min(total, page + 1))}>
-                        Sonraki
+                        Next
                     </Button>
                 </div>
             </nav>
@@ -297,7 +297,7 @@ export const PaginationButtonGroup = ({ align = "left", page = 1, total = 10, ..
                     {({ pages }) => (
                         <ButtonGroup size="md">
                             <Pagination.PrevTrigger asChild>
-                                <ButtonGroupItem iconLeading={ArrowLeft}>{isDesktop ? "Önceki" : undefined}</ButtonGroupItem>
+                                <ButtonGroupItem iconLeading={ArrowLeft}>{isDesktop ? "Previous" : undefined}</ButtonGroupItem>
                             </Pagination.PrevTrigger>
 
                             {pages.map((page, index) =>
@@ -317,7 +317,7 @@ export const PaginationButtonGroup = ({ align = "left", page = 1, total = 10, ..
                             )}
 
                             <Pagination.NextTrigger asChild>
-                                <ButtonGroupItem iconTrailing={ArrowRight}>{isDesktop ? "Sonraki" : undefined}</ButtonGroupItem>
+                                <ButtonGroupItem iconTrailing={ArrowRight}>{isDesktop ? "Next" : undefined}</ButtonGroupItem>
                             </Pagination.NextTrigger>
                         </ButtonGroup>
                     )}

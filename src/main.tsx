@@ -24,7 +24,7 @@ const NotFound = lazy(async () => {
 
 const appFallback = (
     <div className="flex min-h-screen items-center justify-center bg-secondary px-4">
-        <div className="rounded-2xl border border-secondary bg-primary px-5 py-4 text-sm text-tertiary shadow-xs">Yükleniyor...</div>
+        <div className="rounded-2xl border border-secondary bg-primary px-5 py-4 text-sm text-tertiary shadow-xs">Loading...</div>
     </div>
 );
 

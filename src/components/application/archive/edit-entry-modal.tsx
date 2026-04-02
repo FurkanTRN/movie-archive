@@ -28,13 +28,13 @@ interface EditEntryModalProps {
 
 export const EditEntryModal = ({ entry, error, fieldErrors, form, isLoading, onClose, onFormChange, onSubmit, onWatchedDateUnknownChange }: EditEntryModalProps) => {
     return (
-        <ArchiveModalShell title={entry.title} description="İzleme tarihi, not ve puanı güncelle." onClose={onClose}>
+        <ArchiveModalShell title={entry.title} description="Update the watched date, note, and rating." onClose={onClose}>
             <form className="grid gap-5" onSubmit={onSubmit}>
-                <Checkbox label="Tarihi hatırlamıyorum" isSelected={form.isWatchedDateUnknown} onChange={onWatchedDateUnknownChange} />
+                <Checkbox label="I don't remember the date" isSelected={form.isWatchedDateUnknown} onChange={onWatchedDateUnknownChange} />
 
                 <div className="grid gap-4 sm:grid-cols-2">
                     <div className="grid gap-1.5">
-                        <span className="text-sm font-medium text-secondary">İzleme tarihi</span>
+                        <span className="text-sm font-medium text-secondary">Watched date</span>
                         <DatePicker
                             value={form.watchedAt}
                             isDisabled={form.isWatchedDateUnknown}
@@ -43,7 +43,7 @@ export const EditEntryModal = ({ entry, error, fieldErrors, form, isLoading, onC
                         {fieldErrors?.watchedAt ? <span className="text-sm text-error-primary">{fieldErrors.watchedAt}</span> : null}
                     </div>
                     <Input
-                        label="Kişisel puan"
+                        label="Personal rating"
                         type="number"
                         value={form.personalRating}
                         onChange={(value) => onFormChange("personalRating", value)}
@@ -52,16 +52,16 @@ export const EditEntryModal = ({ entry, error, fieldErrors, form, isLoading, onC
                     />
                 </div>
 
-                <TextArea label="Not" rows={5} value={form.notes} onChange={(value) => onFormChange("notes", value)} />
+                <TextArea label="Note" rows={5} value={form.notes} onChange={(value) => onFormChange("notes", value)} />
 
                 {error && <div className="rounded-xl border border-error_subtle bg-error-primary px-4 py-3 text-sm text-error-primary">{error}</div>}
 
                 <div className="flex flex-wrap gap-3">
                     <Button size="lg" type="submit" isLoading={isLoading}>
-                        Kaydet
+                        Save
                     </Button>
                     <Button color="secondary" size="lg" onClick={onClose}>
-                        Vazgeç
+                        Cancel
                     </Button>
                 </div>
             </form>

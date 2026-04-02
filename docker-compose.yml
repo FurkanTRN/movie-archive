@@ -1,6 +1,8 @@
 services:
   movie-archive:
-    image: rg.furkantrn.com/movie-archive:${IMAGE_TAG:-latest}
+    build:
+      context: .
+    image: movie-archive:local
     container_name: movie-archive
     restart: unless-stopped
     env_file:
@@ -28,9 +30,11 @@ services:
       retries: 3
       start_period: 15s
   movie-archive-backup:
-    image: rg.furkantrn.com/movie-archive:${IMAGE_TAG:-latest}
+    image: movie-archive:local
     container_name: movie-archive-backup
     restart: unless-stopped
+    depends_on:
+      - movie-archive
     env_file:
       - .env
     environment:

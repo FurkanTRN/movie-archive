@@ -76,7 +76,7 @@ export const Calendar = ({ highlightedDates, className, ...props }: CalendarProp
 
                 <div className="flex gap-3">
                     <DateInput className="flex-1" />
-                    <PresetButton value={today(getLocalTimeZone())}>Bugün</PresetButton>
+                    <PresetButton value={today(getLocalTimeZone())}>Today</PresetButton>
                 </div>
 
                 <AriaCalendarGrid weekdayStyle="short" className="w-max">

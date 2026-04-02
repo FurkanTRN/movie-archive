@@ -5,12 +5,14 @@ import { env } from "../config/env.js";
 import { SqliteSessionStore } from "./sqlite-session-store.js";
 
 const MemoryStore = createMemoryStore(session);
+const SESSION_COOKIE_NAME = "movie-archive.sid";
+const SESSION_MAX_AGE_MS = 1000 * 60 * 60 * 24 * 7;
 
-const sessionCookieSecure = env.cookieSecureAuto ? env.nodeEnv === "production" : false;
+const sessionCookieSecure = env.nodeEnv === "production";
 
 export const sessionCookieOptions = {
     httpOnly: true,
-    maxAge: env.sessionMaxAgeMs,
+    maxAge: SESSION_MAX_AGE_MS,
     path: "/",
     sameSite: "lax" as const,
     secure: sessionCookieSecure,
@@ -33,7 +35,7 @@ const store =
           });
 
 export const sessionRuntimeInfo = {
-    cookieName: env.sessionCookieName,
+    cookieName: SESSION_COOKIE_NAME,
     secureCookies: sessionCookieSecure,
     storeKind: env.nodeEnv === "production" ? "sqlite" : "memory",
     trustProxy: env.trustProxy,
@@ -41,7 +43,7 @@ export const sessionRuntimeInfo = {
 
 export const sessionMiddleware = session({
     cookie: sessionCookieOptions,
-    name: env.sessionCookieName,
+    name: SESSION_COOKIE_NAME,
     resave: false,
     rolling: true,
     saveUninitialized: false,

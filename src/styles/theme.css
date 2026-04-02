@@ -5,42 +5,42 @@
     --font-mono: ui-monospace, "Roboto Mono", SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 
     /* FONT SIZE */
-    --text-xs: calc(var(--spacing) * 3);
-    --text-xs--line-height: calc(var(--spacing) * 4.5);
+    --text-xs: 0.6875rem;
+    --text-xs--line-height: 1rem;
 
-    --text-sm: calc(var(--spacing) * 3.5);
-    --text-sm--line-height: calc(var(--spacing) * 5);
+    --text-sm: 0.8125rem;
+    --text-sm--line-height: 1.125rem;
 
-    --text-md: calc(var(--spacing) * 4);
-    --text-md--line-height: calc(var(--spacing) * 6);
+    --text-md: 0.9375rem;
+    --text-md--line-height: 1.375rem;
 
-    --text-lg: calc(var(--spacing) * 4.5);
-    --text-lg--line-height: calc(var(--spacing) * 7);
+    --text-lg: 1.0625rem;
+    --text-lg--line-height: 1.5rem;
 
-    --text-xl: calc(var(--spacing) * 5);
-    --text-xl--line-height: calc(var(--spacing) * 7.5);
+    --text-xl: 1.1875rem;
+    --text-xl--line-height: 1.75rem;
 
-    --text-display-xs: calc(var(--spacing) * 6);
-    --text-display-xs--line-height: calc(var(--spacing) * 8);
+    --text-display-xs: 1.5rem;
+    --text-display-xs--line-height: 2rem;
 
-    --text-display-sm: calc(var(--spacing) * 7.5);
-    --text-display-sm--line-height: calc(var(--spacing) * 9.5);
+    --text-display-sm: 1.75rem;
+    --text-display-sm--line-height: 2.25rem;
 
-    --text-display-md: calc(var(--spacing) * 9);
-    --text-display-md--line-height: calc(var(--spacing) * 11);
-    --text-display-md--letter-spacing: -0.72px;
+    --text-display-md: 2.125rem;
+    --text-display-md--line-height: 2.625rem;
+    --text-display-md--letter-spacing: -0.04em;
 
-    --text-display-lg: calc(var(--spacing) * 12);
-    --text-display-lg--line-height: calc(var(--spacing) * 15);
-    --text-display-lg--letter-spacing: -0.96px;
+    --text-display-lg: 2.75rem;
+    --text-display-lg--line-height: 3.25rem;
+    --text-display-lg--letter-spacing: -0.045em;
 
-    --text-display-xl: calc(var(--spacing) * 15);
-    --text-display-xl--line-height: calc(var(--spacing) * 18);
-    --text-display-xl--letter-spacing: -1.2px;
+    --text-display-xl: 3.5rem;
+    --text-display-xl--line-height: 4rem;
+    --text-display-xl--letter-spacing: -0.05em;
 
-    --text-display-2xl: calc(var(--spacing) * 18);
-    --text-display-2xl--line-height: calc(var(--spacing) * 22.5);
-    --text-display-2xl--letter-spacing: -1.44px;
+    --text-display-2xl: 4.25rem;
+    --text-display-2xl--line-height: 4.75rem;
+    --text-display-2xl--letter-spacing: -0.055em;
 
     /* MAX WIDTH */
     --max-width-container: 1280px;

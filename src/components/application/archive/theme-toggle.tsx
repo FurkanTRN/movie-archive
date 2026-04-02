@@ -8,7 +8,7 @@ export const ThemeToggle = () => {
 
     return (
         <Button
-            aria-label={isDarkMode ? "Açık temaya geç" : "Koyu temaya geç"}
+            aria-label={isDarkMode ? "Switch to light theme" : "Switch to dark theme"}
             color="secondary"
             iconLeading={isDarkMode ? Sun : Moon01}
             size="lg"

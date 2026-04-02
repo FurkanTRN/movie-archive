@@ -1,4 +1,5 @@
 import { ensureAdminUser } from "../auth/ensure-admin-user.js";
+import { logger } from "../lib/logger.js";
 import { AppError } from "../middleware/error-handler.js";
 
 const createAdmin = async () => {
@@ -10,17 +11,28 @@ const createAdmin = async () => {
 
     switch (result.reason) {
         case "created":
-            console.log("Admin user created from environment variables");
+            logger.info("Admin user created from environment variables", {
+                event: "admin_bootstrap_created",
+            });
             return;
         case "existing-admin":
-            console.log("Admin user already exists for the configured email");
+            logger.info("Admin user already exists for the configured email", {
+                event: "admin_bootstrap_existing_admin",
+            });
             return;
         case "existing-users":
-            console.log("Skipped admin creation because users already exist");
+            logger.info("Skipped admin creation because users already exist", {
+                event: "admin_bootstrap_existing_users",
+            });
             return;
         case "missing-env":
             throw new AppError("ADMIN_EMAIL and ADMIN_PASSWORD must be set", 400);
     }
 };
 
-void createAdmin();
+void createAdmin().catch((error) => {
+    logger.error("Admin bootstrap script failed", {
+        event: "admin_bootstrap_script_failed",
+    }, error);
+    process.exit(1);
+});

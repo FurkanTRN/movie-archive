@@ -9,7 +9,7 @@ const watchedAtSchema = z
         }
 
         return !Number.isNaN(new Date(value).getTime());
-    }, "İzleme tarihi geçerli bir tarih olmalıdır")
+    }, "Watched date must be a valid date")
     .transform((value) => {
         if (value == null || value === "") {
             return null;
@@ -28,24 +28,24 @@ const notesSchema = z
 const personalRatingSchema = z
     .union([z.number(), z.null(), z.undefined()])
     .refine((value) => value == null || (Number.isInteger(value) && value >= 1 && value <= 10), {
-        message: "Kişisel puan 1 ile 10 arasında tam sayı olmalıdır",
+        message: "Personal rating must be an integer between 1 and 10",
     })
     .transform((value) => value ?? null);
 
 export const archiveQuerySchema = z.object({
-    genre: z.string().trim().min(1, "Tür filtresi geçersiz").optional(),
-    limit: z.coerce.number().int("Sayfa boyutu 1 ile 12 arasında olmalıdır").min(1, "Sayfa boyutu 1 ile 12 arasında olmalıdır").max(12, "Sayfa boyutu 1 ile 12 arasında olmalıdır").default(12),
-    minRating: z.coerce.number().int("Kişisel puan filtresi 1 ile 10 arasında olmalıdır").min(1, "Kişisel puan filtresi 1 ile 10 arasında olmalıdır").max(10, "Kişisel puan filtresi 1 ile 10 arasında olmalıdır").optional(),
-    page: z.coerce.number().int("Sayfa numarası 1 veya daha büyük olmalıdır").min(1, "Sayfa numarası 1 veya daha büyük olmalıdır").default(1),
+    genre: z.string().trim().min(1, "Genre filter is invalid").optional(),
+    limit: z.coerce.number().int("Page size must be between 1 and 12").min(1, "Page size must be between 1 and 12").max(12, "Page size must be between 1 and 12").default(12),
+    minRating: z.coerce.number().int("Personal rating filter must be between 1 and 10").min(1, "Personal rating filter must be between 1 and 10").max(10, "Personal rating filter must be between 1 and 10").optional(),
+    page: z.coerce.number().int("Page number must be 1 or greater").min(1, "Page number must be 1 or greater").default(1),
     q: z.string().trim().optional(),
     sort: z.enum(["rating", "recent", "releaseYearDesc", "title", "watchedAt"]).optional(),
-    year: z.coerce.number().int("Yıl filtresi geçersiz").min(1888, "Yıl filtresi geçersiz").optional(),
+    year: z.coerce.number().int("Year filter is invalid").min(1888, "Year filter is invalid").optional(),
 });
 
 export const archiveCreateBodySchema = z.object({
     notes: notesSchema,
     personalRating: personalRatingSchema,
-    tmdbId: z.coerce.number().int("Geçerli bir film kimliği gönderilmelidir").positive("Geçerli bir film kimliği gönderilmelidir"),
+    tmdbId: z.coerce.number().int("A valid movie ID must be provided").positive("A valid movie ID must be provided"),
     watchedAt: watchedAtSchema,
 });
 
@@ -56,5 +56,5 @@ export const archiveUpdateBodySchema = z.object({
 });
 
 export const archiveIdParamsSchema = z.object({
-    id: z.coerce.number().int("Geçerli bir arşiv kaydı kimliği gönderilmelidir").positive("Geçerli bir arşiv kaydı kimliği gönderilmelidir"),
+    id: z.coerce.number().int("A valid archive entry ID must be provided").positive("A valid archive entry ID must be provided"),
 });

@@ -3,15 +3,15 @@ import { toIsoDateString } from "@/components/application/archive/archive-utils"
 import type { DateValue } from "react-aria-components";
 
 export const loginFormSchema = z.object({
-    email: z.string().trim().min(1, "E-posta zorunludur").email("Geçerli bir e-posta girilmelidir"),
-    password: z.string().trim().min(1, "Şifre zorunludur"),
+    email: z.string().trim().min(1, "Email is required").email("Enter a valid email address"),
+    password: z.string().trim().min(1, "Password is required"),
 });
 
 const personalRatingSchema = z
     .string()
     .trim()
     .refine((value) => value === "" || (/^\d+$/.test(value) && Number(value) >= 1 && Number(value) <= 10), {
-        message: "Kişisel puan 1 ile 10 arasında tam sayı olmalıdır",
+        message: "Personal rating must be an integer between 1 and 10",
     });
 
 export const archiveFormSchema = z
@@ -25,7 +25,7 @@ export const archiveFormSchema = z
         if (!value.isWatchedDateUnknown && !value.watchedAt) {
             context.addIssue({
                 code: "custom",
-                message: "İzleme tarihi zorunludur",
+                message: "Watched date is required",
                 path: ["watchedAt"],
             });
         }

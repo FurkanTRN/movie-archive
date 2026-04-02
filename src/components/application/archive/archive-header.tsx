@@ -53,35 +53,35 @@ export const ArchiveHeader = ({
         <div className="border-b border-secondary bg-primary/90 backdrop-blur">
             <div className="mx-auto flex max-w-7xl flex-col gap-5 px-4 py-5 lg:px-8">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                    <h1 className="text-display-sm font-semibold text-primary">Film Arşivi</h1>
+                    <h1 className="text-display-sm font-semibold text-primary">Movie Archive</h1>
 
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
                         <ThemeToggle />
                         <Button color="secondary" size="lg" onClick={onOpenAddMovie}>
-                            Film ekle
+                            Add movie
                         </Button>
                         <Button color="secondary-destructive" size="lg" isLoading={authPending} onClick={onLogout}>
-                            Çıkış yap
+                            Log out
                         </Button>
                     </div>
                 </div>
 
                 <div className="grid grid-cols-1 gap-4 rounded-3xl border border-secondary bg-secondary px-4 py-4 md:grid-cols-2 xl:grid-cols-[3fr_2fr_2fr_2fr_2fr]">
                     <div className="md:col-span-2 xl:col-auto">
-                        <Input label="Arşivde ara" placeholder="Sadece film adı ile ara" value={archiveQuery} onChange={onArchiveQueryChange} />
+                        <Input label="Search archive" placeholder="Search by movie title only" value={archiveQuery} onChange={onArchiveQueryChange} />
                     </div>
                     <div className="md:col-span-1 xl:col-auto">
-                        <NativeSelect label="Sırala" options={sortOptions} value={sort} onChange={(event) => onSortChange(event.target.value)} />
+                        <NativeSelect label="Sort" options={sortOptions} value={sort} onChange={(event) => onSortChange(event.target.value)} />
                     </div>
                     <div className="md:col-span-1 xl:col-auto">
-                        <NativeSelect label="Tür" options={genreOptions} value={genreFilter} onChange={(event) => onGenreFilterChange(event.target.value)} />
+                        <NativeSelect label="Genre" options={genreOptions} value={genreFilter} onChange={(event) => onGenreFilterChange(event.target.value)} />
                     </div>
                     <div className="md:col-span-1 xl:col-auto">
-                        <NativeSelect label="Yıl" options={yearOptions} value={yearFilter} onChange={(event) => onYearFilterChange(event.target.value)} />
+                        <NativeSelect label="Year" options={yearOptions} value={yearFilter} onChange={(event) => onYearFilterChange(event.target.value)} />
                     </div>
                     <div className="md:col-span-1 xl:col-auto">
                         <NativeSelect
-                            label="Kişisel puan"
+                            label="Personal rating"
                             options={ratingOptions}
                             value={ratingFilter}
                             onChange={(event) => onRatingFilterChange(event.target.value)}

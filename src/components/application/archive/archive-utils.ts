@@ -3,27 +3,27 @@ import type { DateValue } from "react-aria-components";
 
 export const formatDate = (value: string | null) => {
     if (!value) {
-        return "Tarih girilmedi";
+        return "No date provided";
     }
 
-    return new Intl.DateTimeFormat("tr-TR", {
+    return new Intl.DateTimeFormat("en-US", {
         dateStyle: "medium",
     }).format(new Date(value));
 };
 
 export const formatRuntime = (runtimeMinutes: number | null) => {
     if (!runtimeMinutes) {
-        return "Süre yok";
+        return "No runtime";
     }
 
     const hours = Math.floor(runtimeMinutes / 60);
     const minutes = runtimeMinutes % 60;
 
     if (!hours) {
-        return `${minutes} dk`;
+        return `${minutes} min`;
     }
 
-    return `${hours}s ${minutes}dk`;
+    return `${hours}h ${minutes}m`;
 };
 
 export const toDateInputValue = (value: string | null) => {
@@ -35,7 +35,7 @@ export const toDateInputValue = (value: string | null) => {
 };
 
 export const buildUniqueValues = (values: string[]) => {
-    return Array.from(new Set(values)).sort((left, right) => left.localeCompare(right, "tr"));
+    return Array.from(new Set(values)).sort((left, right) => left.localeCompare(right, "en"));
 };
 
 export const toDatePickerValue = (value: string | null): DateValue | null => {

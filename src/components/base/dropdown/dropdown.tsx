@@ -88,7 +88,7 @@ const DropdownItem = ({ label, children, addon, icon: Icon, unstyled, ...props }
     );
 };
 
-interface DropdownMenuProps<T extends object> extends AriaMenuProps<T> {}
+type DropdownMenuProps<T extends object> = AriaMenuProps<T>;
 
 const DropdownMenu = <T extends object>(props: DropdownMenuProps<T>) => {
     return (
@@ -103,7 +103,7 @@ const DropdownMenu = <T extends object>(props: DropdownMenuProps<T>) => {
     );
 };
 
-interface DropdownPopoverProps extends AriaPopoverProps {}
+type DropdownPopoverProps = AriaPopoverProps;
 
 const DropdownPopover = (props: DropdownPopoverProps) => {
     return (

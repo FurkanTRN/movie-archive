@@ -76,7 +76,7 @@ export const formatCardNumber = (number: string) => {
     return cleaned;
 };
 
-interface PaymentInputProps extends Omit<InputBaseProps, "icon"> {}
+type PaymentInputProps = Omit<InputBaseProps, "icon">;
 
 export const PaymentInput = ({ onChange, value, defaultValue, className, maxLength = 19, label, hint, ...props }: PaymentInputProps) => {
     const [cardNumber, setCardNumber] = useControlledState(value, defaultValue || "", (value) => {

@@ -7,6 +7,7 @@ import { authRouter } from "./routes/auth-router.js";
 import { archiveRouter } from "./routes/archive-router.js";
 import { env } from "./config/env.js";
 import { errorHandler, notFoundHandler } from "./middleware/error-handler.js";
+import { requestContextMiddleware, requestLoggingMiddleware } from "./middleware/request-logging.js";
 import { sessionMiddleware } from "./middleware/session-middleware.js";
 import { healthRouter } from "./routes/health-router.js";
 import { moviesRouter } from "./routes/movies-router.js";
@@ -33,7 +34,9 @@ export const createApp = () => {
     }
 
     app.use(express.json());
+    app.use(requestContextMiddleware);
     app.use(sessionMiddleware);
+    app.use(requestLoggingMiddleware);
 
     app.get("/api", (_request, response) => {
         response.json({

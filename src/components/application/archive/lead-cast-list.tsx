@@ -7,7 +7,7 @@ interface LeadCastListProps {
 
 export const LeadCastList = ({ cast }: LeadCastListProps) => {
     if (cast.length === 0) {
-        return <p className="text-sm text-tertiary">Oyuncu bilgisi bulunamadı.</p>;
+        return <p className="text-sm text-tertiary">No cast information available.</p>;
     }
 
     return (
@@ -17,7 +17,7 @@ export const LeadCastList = ({ cast }: LeadCastListProps) => {
                     <Avatar size="sm" src={castMember.profileUrl} alt={castMember.name} initials={castMember.name.slice(0, 1).toUpperCase()} />
                     <div className="min-w-0">
                         <p className="truncate text-sm font-medium text-primary">{castMember.name}</p>
-                        <p className="text-xs text-tertiary">Başrol</p>
+                        <p className="text-xs text-tertiary">Lead cast</p>
                     </div>
                 </div>
             ))}

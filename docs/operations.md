@@ -1,30 +1,23 @@
 # Operations Runbook
 
-## Production Basics
+## Runtime model
 
 - Runtime: `Docker Compose`
-- Registry: `rg.furkantrn.com/movie-archive`
-- Deploy model: immutable image SHA via Woodpecker
+- App image source: local `Dockerfile` build
 - Reverse proxy: external to this repository
+- Persistence: host-mounted `./data` and `./backups`
 
-## Deploy
+## Start or update the stack
 
-Production deploy is triggered from Woodpecker with:
+Run from the project root:
 
-- target: `production`
-- task: `deploy`
+```bash
+docker compose up --build -d
+```
 
-The deploy step:
+This rebuilds the app image from the local repo and starts both the app and backup sidecar.
 
-1. logs in to the private registry
-2. pulls the image for the current commit SHA
-3. runs `docker compose up -d`
-4. waits for the container health status
-5. checks `/api/health`
-
-## Manual Runtime Commands
-
-Run these from the production deploy directory.
+## Useful commands
 
 Show service status:
 
@@ -37,6 +30,8 @@ View logs:
 ```bash
 docker compose logs --tail=200
 ```
+
+The app writes structured JSON logs in production and human-readable logs in development. Every request log includes a request ID that is also returned as `X-Request-Id` in API responses.
 
 Restart app:
 
@@ -56,20 +51,20 @@ Run a manual backup inside the app container:
 docker exec movie-archive node dist-server/src/scripts/backup-sqlite.js
 ```
 
-Pull and apply a specific image tag:
+Rebuild after local changes:
 
 ```bash
-IMAGE_TAG=<tag> docker compose pull
-IMAGE_TAG=<tag> docker compose up -d
+docker compose build
+docker compose up -d
 ```
 
 ## Rollback
 
-Rollback uses a previously pushed immutable image tag.
+Rollback uses your last known-good source revision plus the persisted `./data` directory.
 
 ```bash
-IMAGE_TAG=<previous-commit-sha> docker compose pull
-IMAGE_TAG=<previous-commit-sha> docker compose up -d
+git checkout <known-good-commit-or-tag>
+docker compose up --build -d
 ```
 
 After rollback:
@@ -81,17 +76,17 @@ After rollback:
 
 ## Troubleshooting
 
-If deploy fails:
-
-- inspect Woodpecker step logs
-- confirm `deploy_path` points to the correct compose directory
-- confirm the runner still has Docker socket access
-- confirm `.env` exists in the deploy directory
-
 If the app is up but unhealthy:
 
 - inspect container logs
 - inspect `movie-archive-backup` logs if backup freshness is stale
 - verify `SESSION_SECRET`, `TMDB_API_KEY`, and `APP_BASE_URL`
+- verify `LOG_LEVEL` only if logs are unexpectedly too quiet
 - verify the SQLite path is writable
 - check free disk space on the server
+
+If the app does not start at all:
+
+- verify `TMDB_API_KEY` is valid
+- verify the host can reach `api.themoviedb.org`
+- inspect startup logs for TMDb configuration validation failures

@@ -1,9 +1,10 @@
 import { env } from "../config/env.js";
+import { logger } from "../lib/logger.js";
 import { AppError } from "../middleware/error-handler.js";
 import type { TmdbMovieDetail, TmdbSearchResponse } from "./tmdb-types.js";
 
 const tmdbBaseUrl = "https://api.themoviedb.org/3";
-const tmdbLanguage = "tr-TR";
+const tmdbLanguage = "en-US";
 const movieDetailCacheTtlMs = 1000 * 60 * 10;
 const movieSearchCacheTtlMs = 1000 * 60 * 3;
 
@@ -67,7 +68,47 @@ const fetchTmdb = async <T>(pathname: string, params: Record<string, string> = {
     return (await response.json()) as T;
 };
 
+const validateTmdbConfiguration = async () => {
+    assertTmdbConfigured();
+
+    let response: Response;
+
+    try {
+        response = await fetch(createTmdbUrl("/configuration", {}));
+    } catch {
+        logger.error("TMDb configuration validation failed", {
+            event: "tmdb_validation_failed",
+            reason: "upstream_unreachable",
+        });
+        throw new AppError("TMDb configuration validation failed: unable to reach TMDb", 503);
+    }
+
+    if (response.ok) {
+        logger.info("TMDb configuration validated successfully", {
+            event: "tmdb_validation_succeeded",
+        });
+        return;
+    }
+
+    if (response.status === 401 || response.status === 403) {
+        logger.error("TMDb configuration validation failed", {
+            event: "tmdb_validation_failed",
+            reason: "invalid_api_key",
+            statusCode: response.status,
+        });
+        throw new AppError("TMDB_API_KEY is invalid", 500);
+    }
+
+    logger.error("TMDb configuration validation failed", {
+        event: "tmdb_validation_failed",
+        reason: "unexpected_status",
+        statusCode: response.status,
+    });
+    throw new AppError(`TMDb configuration validation failed with status ${response.status}`, 502);
+};
+
 export const tmdbClient = {
+    validateConfiguration: validateTmdbConfiguration,
     getMovieDetails: async (tmdbId: number) => {
         const cached = getCachedValue(movieDetailCache, tmdbId);
 
@@ -85,7 +126,7 @@ export const tmdbClient = {
         return movie;
     },
     searchMovies: async (query: string) => {
-        const normalizedQuery = query.trim().toLocaleLowerCase("tr-TR");
+        const normalizedQuery = query.trim().toLocaleLowerCase("en-US");
         const cached = getCachedValue(movieSearchCache, normalizedQuery);
 
         if (cached) {

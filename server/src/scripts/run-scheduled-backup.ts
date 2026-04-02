@@ -1,6 +1,7 @@
 import { createBackup, pruneBackupRetention } from "../backup/backup-utils.js";
 import { getMillisecondsUntilNextBackup, getNextBackupRunAt } from "../backup/backup-schedule.js";
 import { env } from "../config/env.js";
+import { logger } from "../lib/logger.js";
 
 const sleep = (durationMs: number) =>
     new Promise((resolve) => {
@@ -8,7 +9,7 @@ const sleep = (durationMs: number) =>
     });
 
 const formatRunTime = (date: Date) =>
-    new Intl.DateTimeFormat("tr-TR", {
+    new Intl.DateTimeFormat("en-US", {
         dateStyle: "short",
         timeStyle: "medium",
         timeZone: env.backupTimezone,
@@ -19,9 +20,13 @@ const runScheduledBackup = async () => {
         const nextRunAt = getNextBackupRunAt();
         const waitMs = getMillisecondsUntilNextBackup();
 
-        console.log(
-            `[backup] Sonraki yedek ${formatRunTime(nextRunAt)} zamanında calisacak (${env.backupTimezone}, 72 saat aralik).`,
-        );
+        logger.info("Next scheduled backup calculated", {
+            event: "backup_scheduled",
+            formattedNextRunAt: formatRunTime(nextRunAt),
+            nextRunAt: nextRunAt.toISOString(),
+            timezone: env.backupTimezone,
+            waitMs,
+        });
 
         await sleep(waitMs);
 
@@ -29,19 +34,23 @@ const runScheduledBackup = async () => {
             const backupPath = await createBackup();
             const retentionResult = pruneBackupRetention();
 
-            console.log(`[backup] Yedek olusturuldu: ${backupPath}`);
-            console.log(
-                `[backup] Retention uygulandi. Korunan: ${retentionResult.keptCount}, silinen: ${retentionResult.removedCount}`,
-            );
+            logger.info("Scheduled backup completed", {
+                backupPath,
+                event: "backup_created",
+                keptCount: retentionResult.keptCount,
+                removedCount: retentionResult.removedCount,
+            });
         } catch (error) {
-            console.error("[backup] Yedek islemi basarisiz oldu.");
-            console.error(error);
+            logger.error("Scheduled backup failed", {
+                event: "backup_failed",
+            }, error);
         }
     }
 };
 
 runScheduledBackup().catch((error) => {
-    console.error("[backup] Scheduler baslatilamadi.");
-    console.error(error);
+    logger.error("Backup scheduler failed to start", {
+        event: "backup_scheduler_start_failed",
+    }, error);
     process.exit(1);
 });

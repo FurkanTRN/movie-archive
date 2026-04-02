@@ -40,7 +40,7 @@ archiveRouter.post("/", async (request, response, next) => {
         const existingEntryId = archiveRepository.findArchiveEntryIdByUserAndMovie(userId, movieId);
 
         if (existingEntryId) {
-            throw new AppError("Bu film zaten arşivde kayıtlı", 409);
+            throw new AppError("This movie is already in the archive", 409);
         }
 
         const archiveEntryId = archiveRepository.createArchiveEntry({
@@ -76,7 +76,7 @@ archiveRouter.patch("/:id", (request, response, next) => {
         );
 
         if (!updated) {
-            throw new AppError("Arşiv kaydı bulunamadı", 404);
+            throw new AppError("Archive entry not found", 404);
         }
 
         response.json({
@@ -95,7 +95,7 @@ archiveRouter.delete("/:id", (request, response, next) => {
         const deleted = archiveRepository.deleteArchiveEntry(archiveEntryId, userId);
 
         if (!deleted) {
-            throw new AppError("Arşiv kaydı bulunamadı", 404);
+            throw new AppError("Archive entry not found", 404);
         }
 
         response.status(204).send();

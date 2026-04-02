@@ -1,5 +1,9 @@
 import { bootstrapDatabase, databaseInfo } from "../database/db.js";
+import { logger } from "../lib/logger.js";
 
 bootstrapDatabase();
 
-console.log(`Database bootstrapped at ${databaseInfo.path}`);
+logger.info("Database bootstrapped", {
+    databasePath: databaseInfo.path,
+    event: "database_bootstrapped",
+});
