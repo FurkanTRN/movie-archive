@@ -88,6 +88,17 @@ ADMIN_EMAIL=admin@example.com
 ADMIN_PASSWORD=change-me
 ```
 
+Need a `TMDB_API_KEY`?
+
+1. Create or sign in to your TMDb account.
+2. Open the API section in your account settings: <https://www.themoviedb.org/settings/api>
+3. Request an API key and copy the v3 API key into `.env` as `TMDB_API_KEY`.
+
+TMDb docs:
+
+- <https://developer.themoviedb.org/docs/getting-started>
+- <https://developer.themoviedb.org/docs/faq>
+
 The app validates `TMDB_API_KEY` against TMDb before startup. If the key is invalid or TMDb cannot be reached, the server will not start.
 
 ## Local development
