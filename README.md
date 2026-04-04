@@ -64,16 +64,6 @@ Recommended path for normal use:
 cp .env.example .env
 docker compose up --build -d
 ```
-
-Useful commands:
-
-```bash
-docker compose ps
-docker compose logs --tail=200
-docker compose logs --tail=200 movie-archive
-docker compose logs --tail=200 movie-archive-backup
-```
-
 Persistent runtime paths:
 
 - `./data` for SQLite files
