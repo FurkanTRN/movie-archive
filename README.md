@@ -195,14 +195,6 @@ Optional control:
 
 - `LOG_LEVEL=debug|info|warn|error`
 
-## Open source
-
-- License: [MIT](LICENSE)
-- Contribution guide: [CONTRIBUTING.md](CONTRIBUTING.md)
-- Project status and direction: [docs/roadmap.md](docs/roadmap.md)
-
-This repository is intended to be a practical self-hosted application, not a managed service or a generic starter kit.
-
 ## Additional docs
 
 - [Environment variables](docs/environment-variables.md)
@@ -210,4 +202,3 @@ This repository is intended to be a practical self-hosted application, not a man
 - [Backup and restore](docs/backup-and-restore.md)
 - [Monitoring](docs/monitoring.md)
 - [Roadmap](docs/roadmap.md)
-- [Contributing](CONTRIBUTING.md)
