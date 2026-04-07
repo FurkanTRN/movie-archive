@@ -16,14 +16,13 @@ Built for people who want:
 - same-origin production runtime with lightweight ops
 - backups, health visibility, and straightforward local ownership
 
+> [!NOTE]
 > `Movie Archive` is a temporary working name. If you have a stronger name or logo direction for the project, open an issue and share it.
 
 ## Why this project
 
 - Personal-first: built for a private archive, not a bloated multi-tenant app
 - Simple to run: source-based Docker deployment with persistent local data
-- Operationally honest: health endpoint, backups, startup validation, and stdout logging
-- Easy to understand: React frontend, Express backend, SQLite storage
 
 ## Stack
 
@@ -32,14 +31,12 @@ Built for people who want:
 - Database: `SQLite`
 - Auth: `server-side session`
 - Metadata provider: `TMDb`
-- Runtime: `Docker Compose` or local Node.js
 
 ## Features
 
 - Search TMDb and add movies into a personal archive
 - Track watched date, rating, and notes
 - Browse archive entries with filtering, sorting, and pagination
-- Serve frontend and API from the same origin in production
 - Persist SQLite data and automated backups with Docker
 
 ## Preview
@@ -87,7 +84,6 @@ Need a `TMDB_API_KEY`?
 TMDb docs:
 
 - <https://developer.themoviedb.org/docs/getting-started>
-- <https://developer.themoviedb.org/docs/faq>
 
 The app validates `TMDB_API_KEY` against TMDb before startup. If the key is invalid or TMDb cannot be reached, the server will not start.
 
@@ -141,15 +137,6 @@ movie.example.com {
 }
 ```
 
-## Quality checks
-
-```bash
-npm run lint
-npm run typecheck
-npm run test
-npm run build
-```
-
 ## Environment
 
 Environment details now live in [docs/environment-variables.md](docs/environment-variables.md).
@@ -159,10 +146,7 @@ Use `.env.example` for the default setup path, and consult the environment varia
 ## Operational notes
 
 - startup fails fast if `TMDB_API_KEY` is missing, invalid, or TMDb is unreachable
-- production serves the frontend and `/api/*` from the same origin
 - automated backups write into `./backups`
-- health endpoint is available at `/api/health`
-- backend logs go to stdout
 
 ## Health, backups, and logging
 
@@ -185,15 +169,6 @@ Automated backup behavior:
 - keeps the latest `3` backup files
 - writes into `./backups`
 
-Backend logs go to stdout:
-
-- development uses human-readable logs
-- production uses structured JSON logs
-- every request includes an `X-Request-Id` response header and matching request log metadata
-
-Optional control:
-
-- `LOG_LEVEL=debug|info|warn|error`
 
 ## Additional docs
 
